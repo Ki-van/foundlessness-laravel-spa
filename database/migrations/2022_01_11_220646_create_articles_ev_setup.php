@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateArticlesEvSetup extends Migration
@@ -16,6 +17,7 @@ class CreateArticlesEvSetup extends Migration
         Schema::create('evaluables', function (Blueprint $table){
            $table->uuid('id')->primary();
         });
+        DB::raw(/** @lang PostgreSQL */'alter table evaluables alter column id set default(gen_random_uuid())');
 
         Schema::create('article_statuses', function (Blueprint $table){
             $table->smallInteger('id')->primary();
@@ -40,6 +42,11 @@ class CreateArticlesEvSetup extends Migration
             $table->string('slug',128);
             $table->timestamps();
         });
+        DB::raw(/** @lang PostgreSQL */'
+        alter table articles alter created_at set default(localtimestamp(0));
+        alter table articles alter updated_at set default(localtimestamp(0));
+');
+
     }
 
     /**
