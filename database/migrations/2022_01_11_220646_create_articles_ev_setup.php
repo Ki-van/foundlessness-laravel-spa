@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -15,9 +16,8 @@ class CreateArticlesEvSetup extends Migration
     public function up()
     {
         Schema::create('evaluables', function (Blueprint $table){
-           $table->uuid('id')->primary();
+           $table->uuid('id')->primary()->default(new Expression('gen_random_uuid()'));
         });
-        DB::raw(/** @lang PostgreSQL */'alter table evaluables alter column id set default(gen_random_uuid())');
 
         Schema::create('article_statuses', function (Blueprint $table){
             $table->smallInteger('id')->primary();
@@ -36,9 +36,18 @@ class CreateArticlesEvSetup extends Migration
             $table->string('heading', 128);
             $table->string('description', 512);
             $table->jsonb('body');
-            $table->foreignId('users_id')->constrained('users');
-            $table->foreignId('article_status_id')->constrained('article_statuses');
-            $table->foreignId('domain_id')->constrained('domains');
+            $table->foreignId('user_id')
+                ->constrained('users')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+            $table->foreignId('article_status_id')
+                ->constrained('article_statuses')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+            $table->foreignId('domain_id')
+                ->constrained('domains')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
             $table->string('slug',128);
             $table->timestamps();
         });
@@ -46,7 +55,6 @@ class CreateArticlesEvSetup extends Migration
         alter table articles alter created_at set default(localtimestamp(0));
         alter table articles alter updated_at set default(localtimestamp(0));
 ');
-
     }
 
     /**
