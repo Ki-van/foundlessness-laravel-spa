@@ -18,28 +18,12 @@ class RoleSeeder extends Seeder
         $roles = [
             [
                 'name' => 'Super Admin',
-                'user_id' => 1,
-                'created_at' => Carbon::now(),
             ],
             [
                 'name' => 'Admin',
-                'user_id' => 2,
-                'created_at' => Carbon::now(),
-            ],
-            [
-                'name' => 'Author',
-                'user_id' => 3,
-                'created_at' => Carbon::now(),
-            ],
-            [
-                'name' => 'Editor',
-                'user_id' => 4,
-                'created_at' => Carbon::now(),
             ],
             [
                 'name' => 'User',
-                'user_id' => 5,
-                'created_at' => Carbon::now(),
             ],
         ];
 

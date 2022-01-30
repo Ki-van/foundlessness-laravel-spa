@@ -15,24 +15,28 @@ class CreateArticlesEvSetup extends Migration
      */
     public function up()
     {
-        Schema::create('evaluables', function (Blueprint $table){
-           $table->uuid('id')->primary()->default(new Expression('gen_random_uuid()'));
+        Schema::create('evaluables', function (Blueprint $table) {
+            $table->uuid('id')->primary()->default(new Expression('gen_random_uuid()'));
         });
 
-        Schema::create('article_statuses', function (Blueprint $table){
-            $table->smallInteger('id')->primary();
+        Schema::create('article_statuses', function (Blueprint $table) {
+            $table->id();
             $table->string('status', 32);
         });
 
-        Schema::create('domains', function (Blueprint $table){
-            $table->smallInteger('id')->primary();
+        Schema::create('domains', function (Blueprint $table) {
+            $table->id('id');
             $table->string('slug');
             $table->string('description');
             $table->string('name');
         });
 
         Schema::create('articles', function (Blueprint $table) {
-            $table->foreignUuid('eval_id')->primary()->constrained('evaluables');
+            $table->foreignUuid('eval_id')
+                ->primary()
+                ->constrained('evaluables')
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
             $table->string('heading', 128);
             $table->string('description', 512);
             $table->jsonb('body');
@@ -48,10 +52,10 @@ class CreateArticlesEvSetup extends Migration
                 ->constrained('domains')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-            $table->string('slug',128);
+            $table->string('slug', 128);
             $table->timestamps();
         });
-        DB::raw(/** @lang PostgreSQL */'
+        DB::raw(/** @lang PostgreSQL */ '
         alter table articles alter created_at set default(localtimestamp(0));
         alter table articles alter updated_at set default(localtimestamp(0));
 ');
