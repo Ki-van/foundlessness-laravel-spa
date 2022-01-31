@@ -53,12 +53,9 @@ class CreateArticlesEvSetup extends Migration
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
             $table->string('slug', 128);
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent();
         });
-        DB::raw(/** @lang PostgreSQL */ '
-        alter table articles alter created_at set default(localtimestamp(0));
-        alter table articles alter updated_at set default(localtimestamp(0));
-');
     }
 
     /**

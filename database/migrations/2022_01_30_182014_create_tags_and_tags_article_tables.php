@@ -22,18 +22,20 @@ class CreateTagsAndTagsArticleTables extends Migration
                 ->constrained('users')
                 ->nullOnDelete()
                 ->cascadeOnUpdate();
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent();
         });
         Schema::create('article_tag', function (Blueprint $table) {
-           $table->foreignUuid('article_eval_id')
-               ->constrained('articles', 'eval_id')
+           $table->foreignUuid('eval_id')
+               ->constrained('evaluables')
                ->cascadeOnDelete()
                ->cascadeOnUpdate();
            $table->foreignId('tag_id')
                ->constrained('tags')
                ->restrictOnDelete()
                ->cascadeOnUpdate();
-           $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent();
         });
     }
 

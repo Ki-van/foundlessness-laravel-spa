@@ -26,13 +26,8 @@ class CreateCommentsTable extends Migration
                 ->constrained('users')
                 ->restrictOnDelete()
                 ->cascadeOnUpdate();
-           /* $table->foreignUuid('comment_eval_id')
-                ->comment('Replay')
-                ->nullable()
-                ->constrained('comments', 'eval_id')
-                ->restrictOnDelete()
-                ->cascadeOnUpdate();*/
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent();
         });
     }
 

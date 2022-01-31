@@ -16,6 +16,7 @@ class CreateMarksTable extends Migration
         Schema::create('marks', function (Blueprint $table) {
             $table->foreignUuid('eval_id')
                 ->primary()
+                ->comment('Can be article, comment etc.')
                 ->constrained('evaluables')
                 ->restrictOnDelete()
                 ->cascadeOnUpdate();
@@ -25,7 +26,8 @@ class CreateMarksTable extends Migration
                 ->restrictOnDelete()
                 ->cascadeOnUpdate();
             $table->integer('value');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent();
         });
     }
 
