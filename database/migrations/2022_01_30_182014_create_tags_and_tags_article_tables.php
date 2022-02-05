@@ -26,7 +26,7 @@ class CreateTagsAndTagsArticleTables extends Migration
             $table->timestamp('updated_at')->useCurrent();
         });
         Schema::create('article_tag', function (Blueprint $table) {
-           $table->foreignId('id')
+           $table->foreignId('article_id')
                ->constrained('articles')
                ->cascadeOnDelete()
                ->cascadeOnUpdate();
