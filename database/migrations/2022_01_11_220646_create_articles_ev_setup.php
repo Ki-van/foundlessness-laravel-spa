@@ -15,9 +15,6 @@ class CreateArticlesEvSetup extends Migration
      */
     public function up()
     {
-        Schema::create('evaluables', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(new Expression('gen_random_uuid()'));
-        });
 
         Schema::create('article_statuses', function (Blueprint $table) {
             $table->id();
@@ -32,15 +29,12 @@ class CreateArticlesEvSetup extends Migration
         });
 
         Schema::create('articles', function (Blueprint $table) {
-            $table->foreignUuid('eval_id')
-                ->primary()
-                ->constrained('evaluables')
-                ->cascadeOnUpdate()
-                ->restrictOnDelete();
+            $table->id();
             $table->string('heading', 128);
             $table->string('description', 512);
             $table->jsonb('body');
             $table->foreignId('user_id')
+                ->comment('Author id')
                 ->constrained('users')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();

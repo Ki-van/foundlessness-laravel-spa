@@ -26,8 +26,8 @@ class CreateTagsAndTagsArticleTables extends Migration
             $table->timestamp('updated_at')->useCurrent();
         });
         Schema::create('article_tag', function (Blueprint $table) {
-           $table->foreignUuid('eval_id')
-               ->constrained('evaluables')
+           $table->foreignId('id')
+               ->constrained('articles')
                ->cascadeOnDelete()
                ->cascadeOnUpdate();
            $table->foreignId('tag_id')

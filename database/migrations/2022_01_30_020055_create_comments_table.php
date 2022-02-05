@@ -14,18 +14,20 @@ class CreateCommentsTable extends Migration
     public function up()
     {
         Schema::create('comments', function (Blueprint $table) {
-            $table->foreignUuid('eval_id')
-                ->primary()
-                ->unique()
-                ->constrained('evaluables')
-                ->restrictOnDelete()
-                ->cascadeOnUpdate();
+            $table->id();
             $table->string('body', 2048);
             $table->foreignId('user_id')
                 ->comment('Author id')
                 ->constrained('users')
                 ->restrictOnDelete()
                 ->cascadeOnUpdate();
+            $table->foreignId('comment_id')
+                ->nullable()
+                ->comment('Replay to another comment')
+                ->constrained('comments')
+                ->cascadeOnUpdate()
+                ->nullOnDelete();
+            $table->morphs('commentable');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
         });

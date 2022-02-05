@@ -14,18 +14,14 @@ class CreateMarksTable extends Migration
     public function up()
     {
         Schema::create('marks', function (Blueprint $table) {
-            $table->foreignUuid('eval_id')
-                ->primary()
-                ->comment('Can be article, comment etc.')
-                ->constrained('evaluables')
-                ->restrictOnDelete()
-                ->cascadeOnUpdate();
+            $table->id();
             $table->foreignId('user_id')
                 ->comment('Author id')
                 ->constrained('users')
                 ->restrictOnDelete()
                 ->cascadeOnUpdate();
             $table->integer('value');
+            $table->morphs('markable');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
         });
