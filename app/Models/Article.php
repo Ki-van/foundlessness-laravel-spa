@@ -8,8 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Article extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'eval_id';
     protected $fillable = ['heading', 'description', 'body', 'slug'];
+    protected $casts = [
+        'body' => 'array'
+    ];
 
     public function comments()
     {
@@ -17,7 +19,7 @@ class Article extends Model
             ->whereNull('comment_id');
     }
     public function marks() {
-        return $this->morphMany(Mark::class, 'markabke');
+        return $this->morphMany(Mark::class, 'markable');
     }
 
     public function user()

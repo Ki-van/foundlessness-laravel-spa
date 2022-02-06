@@ -27,7 +27,7 @@ class CreateCommentsTable extends Migration
                 ->constrained('comments')
                 ->cascadeOnUpdate()
                 ->nullOnDelete();
-            $table->morphs('commentable');
+            $table->nullableMorphs('commentable');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
         });
