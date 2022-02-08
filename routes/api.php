@@ -1,6 +1,9 @@
 <?php
 
-use App\Http\Controllers\API\ArticlesController;
+use App\Http\Controllers\API\ArticleController;
+use App\Http\Controllers\API\CommentController;
+use App\Http\Controllers\API\MarkController;
+use App\Http\Controllers\API\TagController;
 use App\Http\Controllers\API\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,7 +18,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::apiResource('/article', ArticlesController::class);
+Route::apiResource('/article', ArticleController::class);
+Route::apiResource('/comment', CommentController::class);
+Route::apiResource('/mark', MarkController::class);
+Route::apiResource('/tag', TagController::class);
+
 
 Route::post('login', [UserController::class, 'login']);
 Route::post('register', [UserController::class, 'register']);
