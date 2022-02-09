@@ -30,8 +30,8 @@ class CreateArticlesEvSetup extends Migration
 
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
-            $table->string('heading', 128);
-            $table->string('description', 512);
+            $table->string('heading', 255);
+            $table->string('description', 511);
             $table->jsonb('body');
             $table->foreignId('user_id')
                 ->comment('Author id')
@@ -46,7 +46,7 @@ class CreateArticlesEvSetup extends Migration
                 ->constrained('domains')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-            $table->string('slug', 128);
+            $table->string('slug', 63);
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
         });
