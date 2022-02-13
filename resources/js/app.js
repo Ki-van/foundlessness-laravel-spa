@@ -1,13 +1,14 @@
+import Vue from "vue"
+
 require('./bootstrap');
 
-window.Vue = require('vue').default;
-
-import App from "./App.vue";
-import Router from './router'
-import Vuex from 'vuex'
+import Index from './components/Index'
+import router from './router'
 
 new Vue({
-    Router,
-    Vuex,
-    render: h => h(App)
-}).$mount('#app')
+    el: '#app',
+    components: {
+        Index
+    },
+    router,
+});
