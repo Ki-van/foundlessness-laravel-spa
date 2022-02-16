@@ -43,4 +43,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function isAuthor(Article $article)
+    {
+        return $this->id === $article->user_id;
+    }
+
+    public function isAdmin()
+    {
+        return $this->hasRole('Admin');
+    }
 }

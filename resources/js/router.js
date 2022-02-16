@@ -11,17 +11,17 @@ const routes = [
         component: Home
     },
     {
-        name: 'register',
+        name: 'user.register',
         path: '/register',
         component: () => import('./pages/Register')
     },
     {
-        name: 'login',
+        name: 'user.login',
         path: '/login',
         component: () => import('./pages/Login')
     },
     {
-        name: 'dashboard',
+        name: 'user.dashboard',
         path: '/dashboard',
         component: () => import('./pages/Dashboard')
     }

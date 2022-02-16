@@ -29,7 +29,7 @@
 
                             <div class="form-group row mb-0">
                                 <div class="col-md-8 offset-md-4">
-                                    <button type="submit" class="btn btn-primary" @click.prevent="handleSubmit">
+                                    <button type="submit" class="btn btn-primary" @click.prevent="login">
                                         Login
                                     </button>
                                 </div>
@@ -73,13 +73,18 @@ export default {
                         });
                 })
             }
+        },
+        login() {
+            axios.get('/sanctum/csrf-cookie').then(response => {
+                axios.post('/login', {
+                    email: this.email,
+                    password: this.password
+                }).then(r=>{
+                    console.log(r);
+                })
+
+            });
         }
-    },
-    beforeRouteEnter(to, from, next) {
-        if (window.Laravel.isLoggedin) {
-            return next('dashboard');
-        }
-        next();
     }
 }
 </script>
