@@ -1,65 +1,69 @@
 <template>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-
-                <div class="alert alert-danger" role="alert" v-if="error !== null">
-                    {{ error }}
-                </div>
-
-                <div class="card card-default">
-                    <div class="card-header">Register</div>
-                    <div class="card-body">
-                        <form>
-                            <div class="form-group row">
-                                <label for="name" class="col-sm-4 col-form-label text-md-right">Name</label>
-                                <div class="col-md-6">
-                                    <input id="name" type="email" class="form-control" v-model="name" required
-                                           autofocus autocomplete="off">
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="email" class="col-sm-4 col-form-label text-md-right">E-Mail Address</label>
-                                <div class="col-md-6">
-                                    <input id="email" type="email" class="form-control" v-model="email" required
-                                           autofocus autocomplete="off">
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
-                                <div class="col-md-6">
-                                    <input id="password" type="password" class="form-control" v-model="password"
-                                           required autocomplete="off">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="password" class="col-md-4 col-form-label text-md-right">Password confirm</label>
-                                <div class="col-md-6">
-                                    <input id="password_confirm" type="password" class="form-control" v-model="password_confirm"
-                                           required autocomplete="off">
-                                </div>
-                            </div>
-
-                            <div class="form-group row mb-0">
-                                <div class="col-md-8 offset-md-4">
-                                    <button type="submit" class="btn btn-primary" @click.prevent="register">
-                                        Register
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+    <ValidationObserver v-slot="{ handleSubmit }">
+        <form class="container w-50" @submit.prevent="handleSubmit(register)">
+            <div class="form-group">
+                <ValidationProvider rules="alpha_num|required" v-slot="{ errors }">
+                    <label for="name">Имя</label>
+                    <input v-model="name"  id="name">
+                    <span style="color: wheat">{{ errors[0] }}</span>
+                </ValidationProvider>
             </div>
-        </div>
-    </div>
+            <div class="form-group ">
+                <ValidationProvider rules="email|required" v-slot="{ errors }">
+                    <label for="email">Почта</label>
+                    <input v-model="email" id="email">
+                    <span style="color: wheat">{{ errors[0] }}</span>
+                </ValidationProvider>
+            </div>
+            <div class="form-group">
+                <ValidationProvider rules="min:6|required" v-slot="{ errors }">
+                    <label for="password">Пароль</label>
+                    <input type="password" v-model="password" id="password">
+                    <span style="color: wheat">{{ errors[0] }}</span>
+                </ValidationProvider>
+            </div>
+            <div class="form-group">
+                <ValidationProvider rules="is:password|required" v-slot="{ errors }">
+                    <label for="password_confirm">Пароль</label>
+                    <input type="password" v-model="password_confirm"  id="password_confirm">
+                    <span style="color: wheat">{{ errors[0] }}</span>
+                </ValidationProvider>
+            </div>
+            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+        </form>
+    </ValidationObserver>
 </template>
 
 <script>
+import {extend, ValidationObserver, ValidationProvider} from "vee-validate";
+import {required, email, alpha_num, min, is} from 'vee-validate/dist/rules';
+
+extend('email', {
+    ...email,
+    message: 'Не похоже',
+})
+extend('required', {
+    ...required,
+    message: 'Поле {_field_} пусто',
+})
+extend('alpha_num', {
+    ...alpha_num,
+    message: 'Только буквы и цифры',
+})
+extend('min', {
+    validate(value, { length }) {
+        return value.length >= length;
+    },
+    params: ['length'],
+    message: 'Поле {_field_} должно быть как минимум {length} символов'
+});
+
 export default {
     name: "Register",
+    components: {
+      ValidationObserver,
+      ValidationProvider
+    },
     data() {
         return {
             name: "",
@@ -92,3 +96,17 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+input {
+    --bs-bg-opacity: 1;
+    background-color: rgba(var(--bs-dark-rgb),var(--bs-bg-opacity));
+    --bs-text-opacity: 1;
+    color: rgba(var(--bs-white-rgb),var(--bs-text-opacity));
+    padding-right: 0.5rem!important;
+    padding-left: 0.5rem!important;
+    margin-top: 0.25rem!important;
+    margin-bottom: 0.25rem!important;
+    width: 100%!important;
+}
+</style>

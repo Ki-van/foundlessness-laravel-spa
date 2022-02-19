@@ -1,12 +1,21 @@
 <template>
-<div>
-    <router-view></router-view>
-</div>
+    <component :is="layout">
+
+    </component>
 </template>
 
 <script>
+import MainLayout from "../layouts/MainLayout";
 export default {
-    name: "Index"
+    name: "Index",
+    computed: {
+        layout(){
+            return (this.$route.meta.layout || 'main') + '-layout';
+        }
+    },
+    components: {
+        MainLayout
+    }
 }
 </script>
 

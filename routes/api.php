@@ -22,11 +22,7 @@ Route::apiResource('/article', ArticleController::class);
 Route::apiResource('/comment', CommentController::class);
 Route::apiResource('/mark', MarkController::class);
 Route::apiResource('/tag', TagController::class);
-
-
-Route::post('login', [UserController::class, 'login']);
-Route::post('register', [UserController::class, 'register']);
-Route::post('logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
+Route::apiResource('/user', UserController::class);
 
 Route::group(['prefix' => 'books', 'middleware' => 'auth:sanctum'], function () {
 

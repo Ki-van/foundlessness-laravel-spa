@@ -1,90 +1,95 @@
 <template>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-
-                <div class="alert alert-danger" role="alert" v-if="error !== null">
-                    {{ error }}
-                </div>
-
-                <div class="card card-default">
-                    <div class="card-header">Login</div>
-                    <div class="card-body">
-                        <form>
-                            <div class="form-group row">
-                                <label for="email" class="col-sm-4 col-form-label text-md-right">E-Mail Address</label>
-                                <div class="col-md-6">
-                                    <input id="email" type="email" class="form-control" v-model="email" required
-                                           autofocus autocomplete="off">
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
-                                <div class="col-md-6">
-                                    <input id="password" type="password" class="form-control" v-model="password"
-                                           required autocomplete="off">
-                                </div>
-                            </div>
-
-                            <div class="form-group row mb-0">
-                                <div class="col-md-8 offset-md-4">
-                                    <button type="submit" class="btn btn-primary" @click.prevent="login">
-                                        Login
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+    <ValidationObserver v-slot="{ handleSubmit }">
+        <form class="container w-50" @submit.prevent="handleSubmit(login)">
+            <div class="form-group ">
+                <ValidationProvider rules="email|required" v-slot="{ errors }">
+                    <label for="email">Почта</label>
+                    <input v-model="email"  id="email">
+                    <span style="color: wheat">{{ errors[0] }}</span>
+                </ValidationProvider>
             </div>
-        </div>
-    </div>
+
+            <div class="form-group">
+                <ValidationProvider rules="required" v-slot="{ errors }">
+                    <label for="password">Пароль</label>
+                    <input type="password" v-model="password"  id="password">
+                    <span style="color: wheat">{{ errors[0] || message}}</span>
+                </ValidationProvider>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="rememberMe">
+                <label class="form-check-label" for="rememberMe">Запомнить меня</label>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <span v-show="!loading"> Войти  </span>
+                <span v-show="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span v-show="loading"  class="sr-only">Вход...</span>
+            </button>
+
+        </form>
+    </ValidationObserver>
 </template>
 
 <script>
+import {required, email} from 'vee-validate/dist/rules'
+import {ValidationObserver, ValidationProvider, extend} from "vee-validate";
+
+extend('email', {
+    ...email,
+    message: 'Не похоже',
+})
+extend('required', {
+    ...required,
+    message: 'Поле {_field_} пусто',
+})
 export default {
+    components: {
+        ValidationProvider,
+        ValidationObserver
+    },
     name: "Login",
     data() {
         return {
             email: "",
             password: "",
-            error: null
+            loading: false,
+            message: ""
         }
     },
     methods: {
-        handleSubmit(e) {
-            if (this.password.length > 0) {
-                axios.get('/sanctum/csrf-cookie').then(response => {
-                    axios.post('api/login', {
-                        email: this.email,
-                        password: this.password
-                    })
-                        .then(response => {
-                            console.log(response.data)
-                            if (response.data.success) {
-                                this.$router.go('/dashboard')
-                            } else {
-                                this.error = response.data.message
-                            }
-                        })
-                        .catch(function (error) {
-                            console.error(error);
-                        });
-                })
-            }
-        },
         login() {
-            axios.get('/sanctum/csrf-cookie').then(response => {
-                axios.post('/login', {
-                    email: this.email,
-                    password: this.password
-                }).then(r=>{
-                    console.log(r);
-                })
-
-            });
+            this.loading = true;
+            this.$store.dispatch('auth/login', {
+                email: this.email,
+                password: this.password
+            }).then(
+                (resp) => {
+                    console.log(resp)
+                    //this.$router.push('/profile');
+                },
+                error => {
+                    this.loading = false;
+                    this.message =
+                        (error.response && error.response.data) ||
+                        error.message ||
+                        error.toString();
+                }
+            );
         }
     }
 }
 </script>
+
+<style scoped>
+.form-group input {
+    --bs-bg-opacity: 1;
+    background-color: rgba(var(--bs-dark-rgb),var(--bs-bg-opacity));
+    --bs-text-opacity: 1;
+    color: rgba(var(--bs-white-rgb),var(--bs-text-opacity));
+    padding-right: 0.5rem!important;
+    padding-left: 0.5rem!important;
+    margin-top: 0.25rem!important;
+    margin-bottom: 0.25rem!important;
+    width: 100%!important;
+}
+</style>

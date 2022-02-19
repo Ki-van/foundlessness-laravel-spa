@@ -1,5 +1,5 @@
 window._ = require('lodash');
-import router from './router'
+import router from './plugins/router'
 try {
     require('bootstrap');
 } catch (e) {}
@@ -19,6 +19,15 @@ window.axios.interceptors.response.use({}, error => {
        router.push({name: 'user.login'});
 
 });
+//!!!!
+/*let token = document.head.querySelector('meta[name="csrf-token"]');
+
+if (token) {
+    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+} else {
+    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+}*/
+
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting

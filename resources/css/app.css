@@ -1,0 +1,387 @@
+body {
+    height: 100%;
+    margin-bottom: -10px;
+    background-color: black;
+    background-image: url('/images/body-background.png');
+    background-repeat: repeat-x;
+    background-attachment: fixed;
+    background-position: top center;
+}
+
+header {
+    margin: 0 auto;
+    position: relative;
+    width: 1010px;
+    height: 94px;
+    overflow: hidden;
+}
+
+
+.art-header-wrapper {
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.art-header-inner {
+    margin: 0 4px;
+}
+
+div.art-header-center {
+    position: relative;
+    width: 1010px;
+    left: 50%;
+}
+
+div.art-header-png {
+    position: absolute;
+    left: -50%;
+    top: 0;
+    width: 1010px;
+    height: 94px;
+    background-image: url('/images/header.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+
+div.art-headerobject {
+    display: block;
+    left: 80%;
+    position: absolute;
+    top: 0;
+    width: 94px;
+    height: 94px;
+    background-repeat: no-repeat;
+    background-image:  url('/images/header-object.png');
+}
+
+div.art-logo {
+    left: 3%;
+    margin-left: -6px;
+    display: block;
+    position: absolute;
+    top: 4px;
+
+}
+
+h1.art-logo-name {
+    display: block;
+    text-align: left;
+    font-family: "Arial Black";
+    font-size: 36px;
+    letter-spacing: -3px;
+    padding: 0;
+    margin: 0;
+    color: #FFE852;
+
+
+}
+
+h1.art-logo-name a {
+    font-family: "Arial Black", serif;
+    font-size: 36px;
+    letter-spacing: -3px;
+    padding: 0;
+    margin: 0;
+    color: #FFE852;
+    text-decoration: none;
+}
+
+h2.art-logo-text {
+    font-style: italic;
+    font-size: 14px;
+    padding: 0;
+    margin: 0;
+    color: #FFFFFF;
+}
+
+h2.art-logo-text {
+    display: block;
+    text-align: left;
+
+}
+
+.content {
+    background-color: black;
+    overflow: hidden;
+    position: relative;
+    min-width: 25px;
+    min-height: 25px;
+    margin: 4px auto;
+    width: 1010px;
+}
+
+.content, header {
+    border-color: #0a1811;
+    border-style: solid;
+    border-width: 4px;
+    border-radius: 8px;
+}
+
+.push {
+    margin-left: auto;
+}
+
+nav {
+    width: 1010px;
+    height: 26px;
+    background-image: url("/images/nav.png");
+    margin: 0;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+
+ul.nav {
+    display: flex;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.nav li {
+    float: left;
+    align-content: center;
+    height: 100%;
+    box-sizing: content-box;
+}
+
+.nav li.menu-item {
+    width: 6em;
+}
+
+
+ul.nav a {
+    font-family: Arial, serif;
+    font-size: 13px;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding-top: 5px;
+    text-decoration: none;
+    color: white;
+    text-align: center;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+ul.nav li:hover, .menu-item-active {
+    background-color: #333;
+}
+
+.menu-dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    min-width: 300px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+
+}
+
+div.menu-dropdown:hover > .menu-dropdown-content {
+    display: block;
+}
+
+.menu-dropdown {
+    width: 100%;
+    height: 100%;
+}
+
+nav .menu-dropdown-content a {
+    display: block;
+    padding: 5px;
+    width: 100%;
+    text-align: left;
+    box-sizing: border-box;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #333333;
+
+}
+
+nav .menu-dropdown-content a:hover {
+    color: #E8FFA9;
+    border-color: #636363;
+}
+
+.menu-separator {
+    background-image: url("/images/menuseparator.png");
+    display: block;
+    width: 2px;
+    height: 26px;
+    margin: 0;
+}
+
+.block {
+    margin: 3px;
+    padding: 3px;
+    border-style: solid;
+    border-width: 2px;
+    background-color: #0a1811;
+}
+
+h2.art-post-header {
+
+    margin: 5px;
+    font-size: 22px;
+    letter-spacing: -1px;
+    font-family: Arial;
+    font-style: normal;
+    color: white;
+    text-decoration: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+h2.art-post-header img {
+    border: none;
+    margin-right: 5px;
+}
+
+h2.art-post-header a {
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 22px;
+    letter-spacing: -1px;
+    font-family: Arial;
+    font-style: normal;
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+
+h2.art-post-header a:hover {
+    color: grey;
+}
+
+.art-post-header-meta {
+    padding: 1px;
+    color: white;
+    background: #103228;
+    font-family: Arial;
+    font-size: 10px;
+
+}
+
+.art-post-header-meta a {
+    color: #FFE852;
+}
+
+.art-post-content {
+    margin: 12px;
+    padding: 0;
+    font-family: Tahoma;
+    font-size: 12px;
+    color: white;
+}
+
+.art-post-content {
+    cursor: pointer;
+}
+
+.content-footer {
+    min-height: 33px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 11px;
+    color: white;
+    font-family: Arial;
+    text-align: center;
+}
+
+.art-content-lcolumn {
+    width: 25%;
+    padding-right: 5px;
+}
+
+h3 {
+    font-family: Arial;
+    font-style: normal;
+    font-weight: bold;
+    color: white;
+    margin: 19px;
+    font-size: 18px;
+}
+
+.block ul {
+    margin: 1em 0 1em 2em;
+    padding: 0;
+    list-style-type: none;
+    font-family: Tahoma;
+    font-size: 12px;
+
+}
+
+.block li {
+    background-image: url("/images/crossbullet.png");
+    background-repeat: no-repeat;
+    padding-left: 13px;
+    overflow-y: hidden;
+}
+
+.block a {
+    text-decoration: none;
+    color: #FFE852;
+}
+
+.block a:hover {
+    text-decoration: underline;
+}
+
+.btn {
+    border: 1px solid;
+    height: 32px;
+    padding: 8px;
+    cursor: pointer;
+    background-color: #0a1811;
+    font-size: 13px;
+    border-color: white;
+    color: white;
+}
+
+.art-content-rcolumn {
+    height: 100%;
+}
+
+.art-columns {
+    display: flex;
+    flex-direction: row;
+
+}
+
+.art-post-content h4 {
+    color: white;
+    margin: 20px;
+    font-size: 14px;
+    font-family: Arial;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.art-post-content h5 {
+    color: white;
+    margin: 26px;
+    font-size: 12px;
+    font-family: Arial;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+footer {
+    min-height: 33px;
+}
+
+.art-post-content td {
+    text-align: center;
+    border: dashed 1px;
+    padding: 2px;
+}
+
+form label {
+    color: wheat;
+}
+
