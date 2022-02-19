@@ -6,6 +6,7 @@ use App\Models\Article;
 use App\Models\Comment;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 
 class UserArticleCommentSeeder extends Seeder
@@ -31,8 +32,8 @@ class UserArticleCommentSeeder extends Seeder
          */
         $user = User::factory()->create([
             'name' => 'kivan',
-            'email'=>'kirill.ivanin00@yanartdex.ru',
-            'password' => 'password'
+            'email'=>'kirill.ivanin00@yandex.ru',
+            'password' => Hash::make('kivan'),
         ]);
 
         $user->assignRole('Admin');

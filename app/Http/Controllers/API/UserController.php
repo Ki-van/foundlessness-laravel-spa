@@ -2,87 +2,108 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use App\Http\Controllers\Controller;
 
 class UserController extends Controller
 {
-    /**
-     * Register
-     */
-    public function register(Request $request)
+    function __construct()
     {
-        try {
-            $user = new User();
-            $user->name = $request->name;
-            $user->email = $request->email;
-            $user->password = Hash::make($request->password);
-            $user->save();
-
-            $success = true;
-            $message = 'User register successfully';
-        } catch (\Illuminate\Database\QueryException $ex) {
-            $success = false;
-            $message = $ex->getMessage();
-        }
-
-        // response
-        $response = [
-            'success' => $success,
-            'message' => $message,
-        ];
-        return response()->json($response);
+        $this->authorizeResource(User::class, 'users');
     }
 
     /**
-     * Login
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
      */
-    public function login(Request $request)
+    public function index()
     {
-        $credentials = [
-            'email' => $request->email,
-            'password' => $request->password,
-        ];
-
-        if (Auth::attempt($credentials)) {
-            $success = true;
-            $message = 'User login successfully';
-        } else {
-            $success = false;
-            $message = 'Unauthorised';
-        }
-
-        // response
-        $response = [
-            'success' => $success,
-            'message' => $message,
-        ];
-        return response()->json($response);
+        return UserResource::collection(User::all());
     }
 
     /**
-     * Logout
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
-    public function logout()
+    public function store(Request $request)
     {
-        try {
-            Session::flush();
-            $success = true;
-            $message = 'Successfully logged out';
-        } catch (\Illuminate\Database\QueryException $ex) {
-            $success = false;
-            $message = $ex->getMessage();
+        $request->validate([
+            'name'=>'required',
+            'email'=>'required|email',
+            'password'=>'required',
+        ]);
+        $user= User::create([
+            'name'=> $request->name,
+            'email'=> $request->email,
+            'password'=> bcrypt($request->password)
+        ]);
+
+
+        if ($request->has('role')) {
+            $user->assignRole($request->role['name']);
         }
 
-        // response
-        $response = [
-            'success' => $success,
-            'message' => $message,
-        ];
-        return response()->json($response);
+        if ($request->has('permissions')) {
+            $user->givePermissionTo(collect($request->permissions)->pluck('id')->toArray());
+        }
+
+        return response(['message'=>'User Created', 'user'=>$user]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function show(User $user)
+    {
+        return $user->with('roles')->with('permissions');
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, User $user)
+    {
+        $request->validate([
+            'name'=>'required',
+            'email'=>'required|email',
+        ]);
+
+        $user->update([
+            'name'=> $request->name,
+            'email'=> $request->email,
+        ]);
+
+        if ($request->has('role')) {
+            $user->syncRoles($request->role['name']);
+        }
+
+        if ($request->has('permissions')) {
+            $user->syncPermissions(collect($request->permissions)->pluck('id')->toArray());
+        }
+
+        return response(['message'=>'User Updated', 'user'=>$user]);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(User $user)
+    {
+        return User::destroy($user->id);
     }
 }
