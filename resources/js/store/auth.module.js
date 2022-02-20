@@ -1,29 +1,28 @@
 import AuthService from '../services/auth.service';
 
-const token = localStorage.getItem('x_xsrf_token');
-const initialState = token ?
+const user = window.user;
+const initialState = user ?
     {
         status: {
             loggedIn: true
         },
-        token
+        user
     } :
     {
         status: {
             loggedIn: false
         },
-        token: null
+        user: null
     };
 export const auth = {
     namespaced: true,
-    state: {...initialState, user: null},
+    state: {...initialState},
     actions: {
         login({commit}, credentials) {
              return AuthService.login(credentials).then(
-                userInfo => {
-                    console.log( "Action login auth module: ", userInfo);
-                    commit('loginSuccess', userInfo);
-                    return Promise.resolve(userInfo);
+                user => {
+                    commit('loginSuccess', user);
+                    return Promise.resolve(user);
                 },
                 error => {
                     commit('loginFailure');
@@ -31,18 +30,22 @@ export const auth = {
                 }
             );
         },
-        getUserData({commit}) {
-            return axios.p
-        },
         logout({commit}) {
-            AuthService.logout();
-            commit('logout');
+            AuthService.logout().then(
+                response => {
+                    commit('logout', response);
+                    return Promise.resolve(response);
+                },
+                error => {
+                    return Promise.reject(error);
+                }
+            );
         },
-        register({commit}, token) {
-            return AuthService.register(token).then(
+        register({commit}, user) {
+            return AuthService.register(user).then(
                 response => {
                     commit('registerSuccess');
-                    return Promise.resolve(token);
+                    return Promise.resolve(user);
                 },
                 error => {
                     commit('registerFailure');
@@ -52,20 +55,16 @@ export const auth = {
         }
     },
     mutations: {
-        loginSuccess(state, userInfo) {
-            console.log('Login success user info: ',userInfo);
-            state.token = userInfo.token;
-            state.user = userInfo.user;
+        loginSuccess(state, user) {
+            state.user = user;
             state.status.loggedIn = true;
         },
         loginFailure(state) {
             state.status.loggedIn = false;
-            state.token = null;
             state.user = null;
         },
         logout(state) {
             state.status.loggedIn = false;
-            state.token = null;
             state.user = null;
         },
         registerSuccess(state) {

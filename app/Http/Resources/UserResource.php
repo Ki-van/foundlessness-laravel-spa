@@ -14,14 +14,14 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-        $defaultData = parent::toArray($request);
-
-
-        $additionalData = [
-          'role'=> $this->roles->first(),
-          'permissions'=> $this->permissions,
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+            'deleted_at' => $this->deleted_at,
+            'roles' =>  RoleResource::collection($this->roles),
         ];
-
-        return array_merge($defaultData, $additionalData);
     }
 }

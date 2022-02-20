@@ -1,28 +1,17 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8000/';
-
 class AuthService {
     async login(credentials) {
         await axios.get('/sanctum/csrf-cookie');
-        let response = await axios.post('login', credentials);
-        if (response.data) {
-            let token = response.config.headers['X-XSRF-TOKEN']
-            localStorage.setItem('x_xsrf_token', token)
-            return {
-                token: token,
-                user: response.data
-            }
-        }
-        return response;
+        const response = await axios.post('/login', credentials);
+        if(response && response.data)
+            return response.data.data;
+         else throw new Error('Login failed');
     }
 
-    logout() {
-        axios.post('logout').then(response => {
-            localStorage.removeItem('x_xsrf_token')
-
-            return response.data;
-        });
+    async logout() {
+        const response = await axios.post('logout');
+        return response.data;
     }
 
     register(user) {

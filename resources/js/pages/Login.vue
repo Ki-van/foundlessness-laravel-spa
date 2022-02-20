@@ -63,16 +63,18 @@ export default {
                 email: this.email,
                 password: this.password
             }).then(
-                (resp) => {
-                    console.log(resp)
-                    //this.$router.push('/profile');
+                () => {
+                    this.$router.push('/profile');
                 },
                 error => {
                     this.loading = false;
-                    this.message =
-                        (error.response && error.response.data) ||
-                        error.message ||
-                        error.toString();
+                    if(this.$store.state.auth.errors)
+                        this.message = this.$store.state.auth.errors;
+                    else
+                        this.message =
+                            (error.response && error.response.data) ||
+                            error.message ||
+                            error.toString();
                 }
             );
         }

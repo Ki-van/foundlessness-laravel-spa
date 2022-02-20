@@ -1,5 +1,6 @@
 window._ = require('lodash');
 import router from './plugins/router'
+import vuex from './store'
 try {
     require('bootstrap');
 } catch (e) {}
@@ -13,21 +14,22 @@ try {
 window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common['Accept'] = 'application/json';
+
 window.axios.withCredentials = true;
 window.axios.interceptors.response.use({}, error => {
    if(error.response.status === 401 || error.response.status === 419)
-       router.push({name: 'user.login'});
-
+       router.push({name: 'login'});
 });
-//!!!!
-/*let token = document.head.querySelector('meta[name="csrf-token"]');
 
-if (token) {
-    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-} else {
-    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
-}*/
+axios.interceptors.response.use(response => {
+    return response;
+}, error => {
+    if (error.response.status === 401) {
 
+    }
+    return error;
+});
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting

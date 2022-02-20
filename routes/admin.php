@@ -11,14 +11,9 @@
 |
 */
 
-
-use App\Http\Controllers\Admin\PermissionController;
-use App\Http\Controllers\Admin\RoleController;
-use Illuminate\Support\Facades\Route;
-
+/*
 Route::group(['prefix'=>'admin'], function (){
     Route::apiResource('roles', RoleController::class);
     Route::apiResource('permissions', PermissionController::class);
-});
-
+});*/
 

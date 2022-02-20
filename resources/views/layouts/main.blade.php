@@ -17,11 +17,7 @@
     <script>
         @if(\Illuminate\Support\Facades\Auth::check())
             window.user = @json(
-            [
-                'user'=> auth()->user(),
-                'roles'=>auth()->user()->roles,
-                'permissions'=> auth()->user()->getAllPermissions()
-            ]
+            (new \App\Http\Resources\UserResource(Auth::user()))->jsonSerialize()
             );
         @endif
     </script>

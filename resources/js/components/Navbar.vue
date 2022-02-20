@@ -48,7 +48,7 @@
                     <router-link to="/profile">{{user.name}}</router-link>
                     <div class="menu-dropdown-content">
                         <a href="/profile/sandbox">Написать публикацию</a>
-                        <a href="/logout">Выйти</a>
+                        <a @click.prevent="logout">Выйти</a>
                     </div>
                 </div>
             </li>
@@ -67,6 +67,13 @@ export default {
             return this.$store.state.auth.user;
         }
     },
+    methods: {
+        logout() {
+            this.$store.dispatch('auth/logout').then(()=>{
+                this.$router.push('/');
+            });
+        }
+    }
 }
 </script>
 

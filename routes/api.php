@@ -18,11 +18,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+
+
 Route::apiResource('/article', ArticleController::class);
 Route::apiResource('/comment', CommentController::class);
 Route::apiResource('/mark', MarkController::class);
 Route::apiResource('/tag', TagController::class);
 Route::apiResource('/user', UserController::class);
+
+
 
 Route::group(['prefix' => 'books', 'middleware' => 'auth:sanctum'], function () {
 
