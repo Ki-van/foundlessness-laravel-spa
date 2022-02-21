@@ -17,6 +17,11 @@
         <ul>
             <li v-for="(role,index) in currentUser.roles" :key="index">{{role}}</li>
         </ul>
+        <p>Abilitys:</p>
+        <p>
+            {{this.$ability.rules}}
+            {{$can('manage', 'all')}}
+        </p>
     </div>
 </template>
 <script>

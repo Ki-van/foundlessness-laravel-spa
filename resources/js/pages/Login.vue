@@ -33,6 +33,7 @@
 <script>
 import {required, email} from 'vee-validate/dist/rules'
 import {ValidationObserver, ValidationProvider, extend} from "vee-validate";
+import {Ability, AbilityBuilder} from "@casl/ability";
 
 extend('email', {
     ...email,
@@ -63,7 +64,14 @@ export default {
                 email: this.email,
                 password: this.password
             }).then(
-                () => {
+                (user) => {
+                    let rules = [];
+                    if (user.roles[0].name === 'Admin')
+                        rules = [{subject: 'all', action: 'manage'}];
+                    else
+                        rules = [{subject: 'all', actions: user.roles.map((rule) => rule.permissons).join()}];
+                    this.$ability.update(rules);
+
                     this.$router.push('/profile');
                 },
                 error => {

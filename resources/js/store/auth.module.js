@@ -14,6 +14,7 @@ const initialState = user ?
         },
         user: null
     };
+
 export const auth = {
     namespaced: true,
     state: {...initialState},

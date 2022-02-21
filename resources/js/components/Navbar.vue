@@ -20,8 +20,8 @@
                 </div>
             </li>
 
-            <li><span class="menu-separator"></span></li>
-            <li class="menu-item">
+            <li><span class="menu-separator" v-if="$can('manage', 'all')"></span></li>
+            <li class="menu-item" v-if="$can('manage', 'all')">
                 <div class="menu-dropdown">
                     <a href="/admin">Admin</a>
                     <div class="menu-dropdown-content">
