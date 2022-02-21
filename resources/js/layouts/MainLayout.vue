@@ -4,6 +4,29 @@
         <div class="content">
             <Navbar/>
             <router-view/>
+            <div class="block">
+                <h2 class="art-post-header">
+                    <img src="images/cross.png" alt="CROSS" width="22" height="32">
+                    <a href="#">
+                        Математическое доказательство судьбы
+                    </a>
+                </h2>
+                <div class="art-post-header-meta">
+                    <span>Опубликовано</span>
+                    <span class="date">сегодня</span>
+                    |
+                    <a href="#" class="url">
+                        Админом
+                    </a>
+                </div>
+                <div class="art-post-content">
+                    <p>
+                        В основу доказательства положена информационная энтропия - мера неопределённости некоторой системы (в
+                        статистической физике или теории информации). Попутно проведен ликбец по детерменизму.
+                    </p>
+                </div>
+            </div>
+
             <Footer/>
         </div>
     </div>
@@ -19,12 +42,6 @@ export default {
         Header,
         Navbar,
         Footer
-    },
-    mounted() {
-        if(this.$store.state.auth.status.loggedIn)
-        {
-
-        }
     }
 }
 </script>

@@ -8,5 +8,5 @@ if(window.user) {
         rules = [{subject: 'all', actions: user.roles.map((rule) => rule.permissons).join()}];
 
 }
-console.log('Ab service rules', rules);
+
 export default new Ability(rules);

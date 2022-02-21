@@ -1,11 +1,8 @@
 <template>
   <div>
-    <v-app id="inspire" dark>
-      <v-navigation-drawer clipped fixed v-model="drawer" app>
+    <v-app id="inspire">
         <sidebar></sidebar>
-      </v-navigation-drawer>
-
-      <navbar :user="user"></navbar>
+        <navbar :user="user"></navbar>
 
       <v-main>
         <v-container fluid fill-height>
@@ -32,6 +29,10 @@ export default {
   data: () => ({
     drawer: null
   }),
-  props: ["user"]
+  computed: {
+      user() {
+          return this.$store.state.auth.user;
+      }
+  }
 };
 </script>

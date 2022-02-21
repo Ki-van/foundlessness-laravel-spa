@@ -9,12 +9,13 @@ require('./bootstrap');
 require('bootstrap/dist/css/bootstrap.min.css')
 
 Vue.use(abilitiesPlugin, ability);
-Vue.use(vuetify);
+
 
 new Vue({
     el: '#app',
     router,
     store,
+    vuetify,
     components: {
         Index
     },

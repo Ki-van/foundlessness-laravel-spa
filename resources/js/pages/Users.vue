@@ -153,7 +153,7 @@
 
     methods: {
       initialize() {
-        axios.get('/api/users').then(response => {
+        axios.get('/api/user').then(response => {
           this.tableData = response.data.data;
           console.debug('Users', this.tableData)
         });

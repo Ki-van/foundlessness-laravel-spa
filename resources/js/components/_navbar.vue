@@ -1,33 +1,11 @@
 <template>
-  <v-toolbar app fixed clipped-left>
+  <v-app-bar app >
     <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
     <v-toolbar-title>Laravel Vue Admin</v-toolbar-title>
     <v-spacer></v-spacer>
 
-    <v-menu
-      offset-y
-      origin="center center"
-      class="elelvation-1"
-      :nudge-bottom="14"
-      transition="scale-transition"
-    >
-      <v-btn @click="markAsRead" icon flat v-slot="activator">
-        <v-badge color="red" overlap>
-          <span slot="badge">{{unreadNotifications.length}}</span>
-          <v-icon medium>notifications</v-icon>
-        </v-badge>
-      </v-btn>
-
-      <v-list>
-        <v-list-item :class="{'green': notification.read_at==null}" @click="markAsRead" v-for="notification in allNotifications" :key="notification.id">
-          <v-list-item-content>
-            <v-list-item-title>{{notification.data.createdUser.name}} has just registered on {{notification.created_at}}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-menu>
     <v-menu offset-y origin="center center" :nudge-bottom="10" transition="scale-transition">
-      <v-btn icon large flat slot="activator">
+      <v-btn icon large text v-slot="activator">
         <v-avatar size="30px">
           <img src="https://via.placeholder.com/150" alt="Michael Wang">
         </v-avatar>
@@ -43,7 +21,7 @@
       <v-list class="pa-0">
         <v-list-item @click="logout" ripple="ripple" rel="noopener">
           <v-list-item-action>
-            <v-icon>account_circle</v-icon>
+            <v-icon>mdi-account_circle</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>Logout</v-list-item-title>
@@ -51,7 +29,7 @@
         </v-list-item>
       </v-list>
     </v-menu>
-  </v-toolbar>
+  </v-app-bar>
 </template>
 
 

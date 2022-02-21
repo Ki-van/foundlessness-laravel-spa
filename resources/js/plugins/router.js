@@ -35,7 +35,7 @@ const routes = [
         children: [
             {
                 path: 'users',
-                component: () => import('../pages/Users'),
+                component: () => import('../pages/Users')
             },
             {
                 path: 'roles',
