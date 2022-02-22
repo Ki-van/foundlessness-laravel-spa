@@ -1,0 +1,36 @@
+<?php
+
+namespace App\Http\Resources;
+
+use App\Models\ArticleStatus;
+use App\Models\Domain;
+use App\Models\User;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class ArticleResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     */
+    public function toArray($request)
+    {
+        return [
+            'id' => $this->id,
+            'heading' => $this->heading,
+            'description' => $this->description,
+            'body' => $this->description,
+            'user' => $this->user,
+            'comments' => $this->comments,
+            'marks' => $this->marks,
+            'status' => $this->status,
+            'tags' => $this->tags,
+            'domain' => $this->domain,
+            'slug' => $this->slug,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+        ];
+    }
+}

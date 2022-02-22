@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreArticleRequest;
+use App\Http\Resources\ArticleResource;
 use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -12,7 +13,7 @@ class ArticleController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(Article::class, 'article');
+        //$this->authorizeResource(Article::class, 'article');
     }
 
     /**
@@ -22,8 +23,7 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::all();
-        return $articles;
+        return ArticleResource::collection(Article::all());
     }
 
     /**

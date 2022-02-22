@@ -385,3 +385,24 @@ form label {
     color: wheat;
 }
 
+.art-postmetadatafooter {
+    padding: 1px;
+    border-style: solid;
+    border-width: 1px;
+    background-color: #292929;
+    border-color: #636363;
+    color: white;
+    font-size: 13px;
+}
+
+.art-post-evals-footer {
+ padding: 1px;
+ color: white;
+ font-size: 13px;
+}
+
+.domain tag {
+    font-size: 13px;
+    color: #ADADAD;
+
+}
