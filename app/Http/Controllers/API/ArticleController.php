@@ -41,8 +41,9 @@ class ArticleController extends Controller
         $validated = $request->safe()->only(['heading', 'description', 'body', 'domain_id']);
         $validated['user_id'] = 161;
         $validated['article_status_id'] = ArticleStatus::MODERATED_ID;
-
-        return Article::create($validated);
+        $article = Article::create($validated);
+        $article->tags()->attach($request->safe()->only('tag_ids'));
+        return $article;
     }
 
     /**
