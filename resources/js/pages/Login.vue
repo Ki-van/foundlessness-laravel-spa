@@ -20,7 +20,7 @@
                 <input type="checkbox" class="form-check-input" id="rememberMe">
                 <label class="form-check-label" for="rememberMe">Запомнить меня</label>
             </div>
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-dark">
                 <span v-show="!loading"> Войти  </span>
                 <span v-show="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                 <span v-show="loading"  class="sr-only">Вход...</span>

@@ -1,13 +1,16 @@
-<template>
-$END$
-</template>
-
 <script>
 export default {
-name: "VueTitle"
+    name: 'vue-title',
+    props: ['title'],
+    watch: {
+        title: {
+            immediate: true,
+            handler() {
+                document.title = this.title;
+            }
+        }
+    },
+    render () {
+    },
 }
 </script>
-
-<style scoped>
-
-</style>

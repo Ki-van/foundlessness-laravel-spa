@@ -112,6 +112,7 @@ import Editor from "../components/Editor";
 import {extend, ValidationObserver, ValidationProvider} from "vee-validate";
 import {min, required} from "vee-validate/dist/rules";
 import DataService from "../services/data.service";
+import article from "./Article";
 
 extend('required', {
     ...required,
@@ -171,32 +172,42 @@ export default {
             this.editor = editor
             window.editor = editor;
         },
-        createArticle() {
-            DataService.createArticle({
-                heading: this.heading,
-                description: this.description,
-                body: this.article,
-                domain_id: this.selectedDomain.id,
-                tags_id: this.selectedTags
-            }).then((response)=>{
+        async createArticle() {
+            this.loading = true;
+            try {
+                let firstBlock = await this.editor.blocks.getBlockByIndex(0).save();
+                if (firstBlock.tool === 'header') {
+                    this.editor.blocks.delete(0);
+                }
+                this.article = await this.editor.save();
+
+                await DataService.createArticle({
+                    heading: this.heading,
+                    description: this.description,
+                    body: this.article,
+                    domain_id: this.selectedDomain.id,
+                    tags_id: this.selectedTags
+                });
 
                 this.$toasted.show("Отправлено на модерацию", {
                     theme: "toasted-primary",
                     position: "bottom-left",
-                    duration : 1500
+                    duration: 1500
                 });
-                setTimeout(()=>{
+                setTimeout(() => {
                     this.$router.push('/profile');
                 }, 1500);
-            }).catch((error) => {
+            } catch(error) {
+                this.loading = false;
+
                 console.error(error);
                 this.$toasted.show("Не удалось создать публикацию(((", {
                     theme: "toasted-primary",
                     icon: 'error',
                     position: "bottom-left",
                     duration: 3000
-                })
-            })
+                });
+            }
         }
     },
     mounted() {

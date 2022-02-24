@@ -12,6 +12,11 @@ const routes = [
         component: Home
     },
     {
+      name: 'article',
+      path: '/article/:id_slug',
+      component: () => import('../pages/Article')
+    },
+    {
         name: 'profile',
         path: '/profile',
         component: () => import('../pages/Profile'),
@@ -59,6 +64,10 @@ const routes = [
                 component: () => import('../pages/Activities')
             }
         ]
+    },
+    {
+        path: '*',
+        component: () => import('../pages/404')
     }
 ];
 

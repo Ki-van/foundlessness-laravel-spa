@@ -1,7 +1,9 @@
 <template>
     <nav>
         <ul class="nav">
-            <li class="menu-item menu-item-active"><a href="/">Главная</a></li>
+            <li class="menu-item menu-item-active">
+                <router-link :to="{name: 'home'}">Главная</router-link>
+            </li>
             <li><span class="menu-separator"></span></li>
             <li class="menu-item"><a href="/domains">Области знаний</a></li>
             <li><span class="menu-separator"></span></li>
