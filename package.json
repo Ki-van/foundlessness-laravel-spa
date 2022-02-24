@@ -31,7 +31,9 @@
         "@editorjs/list": "^1.6.2",
         "vee-validate": "^3.4.14",
         "vue": "^2.6.14",
+        "vue-dk-toast": "^2.2.3",
         "vue-router": "^3.5.3",
+        "vue-toasted": "^1.1.28",
         "vuetify": "^2.6.3",
         "vuex": "^3.6.2"
     }

@@ -39,7 +39,7 @@ class ArticleController extends Controller
     public function store(StoreArticleRequest $request)
     {
         $validated = $request->safe()->only(['heading', 'description', 'body', 'domain_id']);
-        $validated['user_id'] = 161;
+        $validated['user_id'] = Auth::id();
         $validated['article_status_id'] = ArticleStatus::MODERATED_ID;
         $article = Article::create($validated);
         $article->tags()->attach($request->safe()->only('tag_ids'));

@@ -9,15 +9,15 @@
             </h2>
             <div class="art-post-content">
                 <h4>Если вы хотите стать частью ПСИХ, прочитайте текст ниже:</h4>
-                <p>ПСИХ - уважаемае мной и организованное мной движение, участники которого ищущие люди, требующие от
+                <p>ПСИХ - уважаемая мной и организованное мной движение, участники которого ищущие люди, требующие от
                     себя
                     смотреть дальше своего носа. Целью движения не является коммерческая выгода, а чистый, идеальный
                     интерес.
                     Если вы прочитали Созерцание чистого разума и решили что познали истину, вам будут рады, но не у
                     нас) </p>
-                <p>Участие в движении не предполагает авторизации, но так вы сможите называться своим именем и вас будет
+                <p>Участие в движении не предполагает авторизации, но так вы сможете называться своим именем и вас будет
                     легко
-                    отличить от других учавствующих.</p>
+                    отличить от других участвующих.</p>
                 <p>Если вы чувствуете, что можете дополнить картину надистины, прикрепите вашу статью в форме ниже и в
                     ходе
                     обсуждения мы найдем ей место на карта прогресса</p>
@@ -29,8 +29,9 @@
         <div v-show="stage === 1">
             <div class="block">
                 <Editor class="art-post-content" @editorReady="editorReady"/>
+                <button class="btn btn-dark p-2" @click="toSecondStage">Готов к публикации</button>
             </div>
-            <button class="btn btn-dark" @click="toSecondStage">Готов к публикации</button>
+
         </div>
         <div v-show="this.stage === 2" class="block">
             <div class="block">
@@ -101,9 +102,8 @@
 
                 </form>
             </ValidationObserver>
-            <button class="btn btn-dark" @click="stage = 1">Назад к публикации</button>
+            <button class="btn btn-dark p-2" @click="stage = 1">Назад к публикации</button>
         </div>
-
     </div>
 </template>
 
@@ -156,8 +156,6 @@ export default {
                 this.domains = domains;
                 this.selectedDomain = domains[0];
             });
-
-
             DataService.getTags().then(tags => this.tags = tags);
         },
         toSecondStage() {
@@ -181,8 +179,23 @@ export default {
                 domain_id: this.selectedDomain.id,
                 tags_id: this.selectedTags
             }).then((response)=>{
-              console.log(response);
 
+                this.$toasted.show("Отправлено на модерацию", {
+                    theme: "toasted-primary",
+                    position: "bottom-left",
+                    duration : 1500
+                });
+                setTimeout(()=>{
+                    this.$router.push('/profile');
+                }, 1500);
+            }).catch((error) => {
+                console.error(error);
+                this.$toasted.show("Не удалось создать публикацию(((", {
+                    theme: "toasted-primary",
+                    icon: 'error',
+                    position: "bottom-left",
+                    duration: 3000
+                })
             })
         }
     },

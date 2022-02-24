@@ -7,6 +7,12 @@ import { abilitiesPlugin } from '@casl/vue';
 import ability from './services/ability.service'
 require('./bootstrap');
 require('bootstrap/dist/css/bootstrap.min.css')
+import Toasted from 'vue-toasted';
+
+
+Vue.use(Toasted, {
+    iconPack : 'material'
+});
 
 Vue.use(abilitiesPlugin, ability);
 
