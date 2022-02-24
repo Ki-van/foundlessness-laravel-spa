@@ -53,4 +53,9 @@ class User extends Authenticatable
     {
         return $this->hasRole('Admin');
     }
+
+    public function articles()
+    {
+        return $this->hasMany(Article::class, 'user_id');
+    }
 }

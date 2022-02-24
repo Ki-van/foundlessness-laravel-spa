@@ -14,7 +14,12 @@ const routes = [
     {
         name: 'profile',
         path: '/profile',
-        component: () => import('../pages/Profile')
+        component: () => import('../pages/Profile'),
+    },
+    {
+        name: 'profile.sandbox',
+        path: '/profile/sandbox',
+        component: () => import('../pages/Sandbox'),
     },
     {
         name: 'register',

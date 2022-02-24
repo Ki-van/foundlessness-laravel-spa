@@ -33,7 +33,6 @@
 <script>
 import {required, email} from 'vee-validate/dist/rules'
 import {ValidationObserver, ValidationProvider, extend} from "vee-validate";
-import {Ability, AbilityBuilder} from "@casl/ability";
 
 extend('email', {
     ...email,

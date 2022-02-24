@@ -6,14 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Resources\ArticleResource;
 use App\Models\Article;
+use App\Models\ArticleStatus;
+use App\Models\Domain;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 class ArticleController extends Controller
 {
     public function __construct()
     {
-        //$this->authorizeResource(Article::class, 'article');
+        $this->authorizeResource(Article::class, 'article');
     }
 
     /**
@@ -23,7 +27,7 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        return ArticleResource::collection(Article::all());
+        return ArticleResource::collection(Article::orderByDesc('created_at')->get());
     }
 
     /**
@@ -34,7 +38,10 @@ class ArticleController extends Controller
      */
     public function store(StoreArticleRequest $request)
     {
-        $validated = $request->safe()->only(['heading', 'description', 'body']);
+        $validated = $request->safe()->only(['heading', 'description', 'body', 'domain_id']);
+        $validated['user_id'] = 161;
+        $validated['article_status_id'] = ArticleStatus::MODERATED_ID;
+
         return Article::create($validated);
     }
 

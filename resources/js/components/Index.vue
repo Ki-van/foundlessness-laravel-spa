@@ -12,7 +12,7 @@ export default {
     computed: {
         layout(){
             console.log('Route matched',this.$route.matched);
-            return (this.$route.meta.layout || this.$route.matched[0].meta.layout || 'main') + '-layout';
+            return (this.$route.meta.layout || 'main') + '-layout';
         }
     },
     components: {

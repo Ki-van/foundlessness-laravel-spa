@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Article extends Model
 {
     use HasFactory;
-    protected $fillable = ['heading', 'description', 'body', 'slug'];
+    protected $fillable = ['heading', 'description', 'body', 'slug', 'user_id', 'article_status_id', 'domain_id'];
     protected $casts = [
         'body' => 'array'
     ];

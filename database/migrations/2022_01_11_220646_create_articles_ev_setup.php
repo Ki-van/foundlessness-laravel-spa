@@ -23,7 +23,7 @@ class CreateArticlesEvSetup extends Migration
 
         Schema::create('domains', function (Blueprint $table) {
             $table->id('id');
-            $table->string('slug');
+            $table->string('slug')->nullable();
             $table->string('description');
             $table->string('name');
         });
@@ -46,7 +46,7 @@ class CreateArticlesEvSetup extends Migration
                 ->constrained('domains')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-            $table->string('slug', 63);
+            $table->string('slug', 63)->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
         });

@@ -332,12 +332,12 @@ h3 {
     text-decoration: underline;
 }
 
-.btn {
+.psix-btn {
     border: 1px solid;
     height: 32px;
     padding: 8px;
     cursor: pointer;
-    background-color: #0a1811;
+    background-color: black;
     font-size: 13px;
     border-color: white;
     color: white;

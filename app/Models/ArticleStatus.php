@@ -7,5 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class ArticleStatus extends Model
 {
+    public const MODERATED_ID = 2;
     use HasFactory;
 }

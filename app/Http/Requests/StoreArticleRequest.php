@@ -27,7 +27,10 @@ class StoreArticleRequest extends FormRequest
         return [
             'heading' => 'required|max:255',
             'description' => 'required|min:20|max:511|unique:App\Models\Article',
-            'body' => 'required|json'
+            'body' => 'required',
+            'domain_id' => 'nullable|numeric|exists:domains,id',
+            'tag_ids' => 'nullable|array',
+            'tag_ids.*' => 'exists:tags, id'
         ];
     }
 }
