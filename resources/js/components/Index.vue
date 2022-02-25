@@ -11,7 +11,6 @@ export default {
     name: "Index",
     computed: {
         layout(){
-            console.log('Route matched',this.$route.matched);
             return (this.$route.meta.layout || 'main') + '-layout';
         }
     },

@@ -30,7 +30,7 @@ export default {
                     list: {
                         class: List
                     },
-                    init: InitiateTool,
+                    init: this.article?()=>null:InitiateTool,
                     image: {
                         class: Image,
                         config: {

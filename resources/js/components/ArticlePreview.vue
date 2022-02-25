@@ -2,16 +2,16 @@
     <div class="block">
         <h2 class="art-post-header">
             <img src="images/cross.png" alt="CROSS" width="22" height="32">
-            <a href="#">
+            <router-link :to= "link">
                {{article.heading}}
-            </a>
+            </router-link>
         </h2>
         <div class="art-post-header-meta">
             <span>Опубликовано</span>
-            <span class="date">сегодня</span>
+            <span class="date">{{article.created_at}}</span>
             |
             <a href="#" class="url">
-                Админом
+                {{article.user.name}}
             </a>
         </div>
         <div class="art-post-content">
@@ -48,6 +48,9 @@ export default {
         marksSum() {
             return this.article.marks.map((mark) => mark.value).reduce((partialSum, val) => partialSum + val, 0);
         },
+        link(){
+            return '/article/' + this.article.id;
+        }
     }
 }
 </script>

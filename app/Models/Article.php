@@ -10,7 +10,9 @@ class Article extends Model
     use HasFactory;
     protected $fillable = ['heading', 'description', 'body', 'slug', 'article_status_id', 'domain_id', 'user_id'];
     protected $casts = [
-        'body' => 'array'
+        'body' => 'array',
+        'created_at' => 'datetime:Y-m-d',
+        'updated_at' => 'datetime:Y-m-d',
     ];
 
     public function comments()

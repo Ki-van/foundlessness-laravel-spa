@@ -20,7 +20,17 @@ class ArticleFactory extends Factory
         return [
             'heading' => $this->faker->sentence,
             'description' => $this->faker->paragraph(2),
-            'body'=>['body' => $this->faker->paragraph(3)],
+            'body'=>[
+                'time' => 1645688351878,
+                'blocks' => [
+                    'id'=>'7Jpc-aBF3q',
+                    'data'=>[
+                        'text'=>$this->faker->paragraph(3)
+                    ],
+                    "type" => "paragraph"
+                ],
+                "version" => "2.23.2"
+            ],
             'domain_id' => $this->faker->randomElement([1, 2, 3, 4, 5]),
             'article_status_id' => $this->faker->randomElement(ArticleStatus::all('id')
                 ->map(fn($val)=>$val['id'])->toArray()),

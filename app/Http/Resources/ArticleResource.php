@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use App\Models\ArticleStatus;
 use App\Models\Domain;
 use App\Models\User;
+use DateTime;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ArticleResource extends JsonResource
@@ -29,8 +30,8 @@ class ArticleResource extends JsonResource
             'tags' => $this->tags,
             'domain' => $this->domain,
             'slug' => $this->slug,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'created_at' => (new DateTime($this->created_at))->format("Y-m-d"),
+            'updated_at' => (new DateTime($this->updated_at))->format("Y-m-d"),
         ];
     }
 }

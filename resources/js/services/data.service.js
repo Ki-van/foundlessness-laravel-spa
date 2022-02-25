@@ -20,6 +20,21 @@ class DataService {
         if(response.data)
             return response.data;
     }
+
+    async getArticle(id) {
+        const response = await axios.get(`/api/article/${id}`);
+        if(response && response.data)
+            return response.data.data;
+        else
+            throw new Error('No article with such id was found');
+    }
+
+    async getArticles(params) {
+        const response = await axios.get(`/api/article/`);
+
+        return response.data.data;
+    }
+
 }
 
 export default new DataService();

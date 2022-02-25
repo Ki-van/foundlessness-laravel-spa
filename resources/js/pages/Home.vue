@@ -19,10 +19,7 @@ export default {
     },
     methods: {
      initialize(){
-         axios.get('/api/article').then(response => {
-             this.articles = response.data.data;
-             console.debug('Articles', this.articles)
-         });
+         this.$store.dispatch('article/getArticles').then(response => this.articles = response);
      },
     },
     components: {

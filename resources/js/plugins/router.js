@@ -13,7 +13,7 @@ const routes = [
     },
     {
       name: 'article',
-      path: '/article/:id_slug',
+      path: '/article/:id',
       component: () => import('../pages/Article')
     },
     {
