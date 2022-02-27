@@ -16,7 +16,10 @@ export default {
             editorInstance: null
         };
     },
-    props: ['article', 'readonly'],
+    props: {
+        article: Object,
+        readonly: Boolean
+    },
     methods: {
         init() {
            this.editorInstance = new EditorJS({
@@ -64,6 +67,7 @@ export default {
     },
     mounted: function() {
         this.init();
+        console.log('Editor mounted', this.article, this.readonly);
     },
 
 };

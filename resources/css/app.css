@@ -244,6 +244,7 @@ h2.art-post-header img {
 
 h2.art-post-header a {
     text-decoration: none;
+    cursor: pointer;
     font-weight: bold;
     font-size: 22px;
     letter-spacing: -1px;
@@ -259,7 +260,7 @@ h2.art-post-header a:hover {
 }
 
 .art-post-header-meta {
-    padding: 1px;
+    padding: 1px 1px 1px 5px;
     color: white;
     background: #103228;
     font-family: Arial;
@@ -392,17 +393,22 @@ form label {
     background-color: #292929;
     border-color: #636363;
     color: white;
+    cursor: pointer;
     font-size: 13px;
 }
 
 .art-post-evals-footer {
- padding: 1px;
- color: white;
- font-size: 13px;
+     padding: 1px;
+     color: white;
+     font-size: 13px;
+     cursor: pointer;
 }
 
 .domain tag {
     font-size: 13px;
     color: #ADADAD;
+}
 
+.mark-active {
+    color: #FFE852;
 }

@@ -21,6 +21,26 @@ class DataService {
             return response.data;
     }
 
+    async createMark(mark) {
+        const response = await axios.post('/api/mark', mark);
+        if(response.data)
+            return response.data;
+    }
+
+    async updateMark(mark_id, value) {
+        const response = await axios.put('/api/mark/'+mark_id, {
+            value: value
+        });
+        if(response.data)
+            return response.data;
+    }
+
+    async deleteMark(mark_id) {
+        const response = await axios.delete('/api/mark/' + mark_id);
+        if(response.data)
+            return response.data;
+    }
+
     async getArticle(id) {
         const response = await axios.get(`/api/article/${id}`);
         if(response && response.data)

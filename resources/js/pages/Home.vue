@@ -1,5 +1,9 @@
 <template>
     <div>
+        <div v-if="loading" class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+            </div>
+        </div>
         <ArticlePreview v-for="article in articles" :key="article.id" :article="article" />
     </div>
 </template>
@@ -11,6 +15,7 @@ export default {
     name: "Home",
     data(){
       return {
+          loading: false,
           articles: [],
         }
     },
@@ -19,7 +24,11 @@ export default {
     },
     methods: {
      initialize(){
-         this.$store.dispatch('article/getArticles').then(response => this.articles = response);
+         this.loading = true;
+         this.$store.dispatch('article/getArticles').then(response => {
+             this.loading = false;
+             this.articles = response;
+         });
      },
     },
     components: {

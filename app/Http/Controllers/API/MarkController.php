@@ -3,8 +3,13 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Article;
+use App\Models\Comment;
 use App\Models\Mark;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class MarkController extends Controller
 {
@@ -26,7 +31,22 @@ class MarkController extends Controller
      */
     public function store(Request $request)
     {
-        //
+         $request->validate([
+            'value' => ['required',Rule::in([1, -1])],
+            'markable_type' => 'required|alpha',
+            'markable_id' => 'required'
+        ]);
+        switch ($request->input('markable_type')){
+            case 'Comment': $markabkeModel = Comment::class;
+                break;
+            default:
+                $markabkeModel = Article::class;
+        }
+
+        return $markabkeModel::findOrFail($request->input('markable_id'))->marks()->create([
+            'value'=> $request->input('value'),
+            'user_id' => Auth::id(),
+        ]);
     }
 
     /**
@@ -49,7 +69,7 @@ class MarkController extends Controller
      */
     public function update(Request $request, Mark $mark)
     {
-        //
+        return $mark->update($request->only(['value']));
     }
 
     /**
@@ -60,6 +80,6 @@ class MarkController extends Controller
      */
     public function destroy(Mark $mark)
     {
-        //
+        $mark->delete();
     }
 }

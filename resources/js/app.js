@@ -9,12 +9,12 @@ require('./bootstrap');
 require('bootstrap/dist/css/bootstrap.min.css')
 import Toasted from 'vue-toasted';
 import titleComponent from './components/VueTitle';
+import { BootstrapVueIcons } from 'bootstrap-vue'
+import 'bootstrap-vue/dist/bootstrap-vue-icons.min.css'
+
+Vue.use(BootstrapVueIcons)
 
 Vue.component('vue-title', titleComponent);
-
-Vue.use(Toasted, {
-    iconPack : 'material'
-});
 
 Vue.use(abilitiesPlugin, ability);
 

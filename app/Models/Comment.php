@@ -9,10 +9,13 @@ class Comment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['body'];
-
+    protected $fillable = ['body', 'user_id', 'comment_id'];
+    protected $casts = [
+        'created_at' => 'datetime:y-m-d hh:mm',
+        'updated_at' => 'datetime:Y-m-d hh:mm',
+    ];
     public function marks() {
-        return $this->morphMany(Mark::class, 'markabke');
+        return $this->morphMany(Mark::class, 'markable');
     }
 
     public function user()

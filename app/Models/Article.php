@@ -17,8 +17,7 @@ class Article extends Model
 
     public function comments()
     {
-        return $this->morphMany(Comment::class, 'commentable')
-            ->with('replies');
+        return $this->morphMany(Comment::class, 'commentable');
     }
     public function marks() {
         return $this->morphMany(Mark::class, 'markable');

@@ -29,6 +29,7 @@
         "@editorjs/header": "^2.6.2",
         "@editorjs/image": "^2.6.2",
         "@editorjs/list": "^1.6.2",
+        "bootstrap-vue": "^2.21.2",
         "vee-validate": "^3.4.14",
         "vue": "^2.6.14",
         "vue-dk-toast": "^2.2.3",

@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\ArticleStatus;
+use App\Models\Comment;
 use App\Models\Domain;
 use App\Models\User;
 use DateTime;
@@ -22,10 +23,10 @@ class ArticleResource extends JsonResource
             'id' => $this->id,
             'heading' => $this->heading,
             'description' => $this->description,
-            'body' => $this->description,
+            'body' => $this->body,
             'user' => $this->user,
-            'comments' => $this->comments,
-            'marks' => $this->marks,
+            'comments' => CommentResource::collection($this->comments),
+            'marks' => MarkResource::collection($this->marks),
             'status' => $this->status,
             'tags' => $this->tags,
             'domain' => $this->domain,

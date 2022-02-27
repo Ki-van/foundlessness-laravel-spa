@@ -170,7 +170,6 @@ export default {
         },
         editorReady(editor) {
             this.editor = editor
-            window.editor = editor;
         },
         async createArticle() {
             this.loading = true;
