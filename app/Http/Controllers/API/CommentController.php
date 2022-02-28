@@ -4,9 +4,11 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCommentRequest;
+use App\Http\Resources\CommentResource;
 use App\Models\Article;
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
@@ -24,27 +26,34 @@ class CommentController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return CommentResource
      */
     public function store(Request $request)
     {
-        $this->validate($request, ['body' => 'required',
-            'comment_id' => 'nullable|exists:comments, id',
-            'commentable_type' => 'require|alpha',
-            'commentable_id' => 'require|exists:articles, id'
+        $this->validate($request, [
+            'body' => 'required',
+            'comment_id' => 'sometimes|required|exists:comments,id',
+            'commentable_type' => 'sometimes|required|alpha',
+            'commentable_id' => 'sometimes|required|exists:articles,id'
         ]);
 
         if($request->has('comment_id'))
-            return Comment::create($request->only(['body', 'comment_id']));
+            return new CommentResource(Comment::create(
+                $request->collect(['body', 'comment_id'])
+                ->merge(['user_id'=>Auth::id()])
+                    ->toArray()));
 
         switch ($request->input('commentable_type')){
             default:
                 $commentableModel = Article::class;
         }
 
-        return $commentableModel::findOrFail($request->input('commentable_id'))->comments()->create([
-            'body'=> $request->input('body')
-        ]);
+        return new CommentResource($commentableModel::findOrFail($request->input('commentable_id'))
+            ->comments()
+            ->create([
+            'body'=> $request->input('body'),
+            'user_id'=>Auth::id()
+        ]));
     }
 
 

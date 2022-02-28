@@ -11,9 +11,11 @@ import Toasted from 'vue-toasted';
 import titleComponent from './components/VueTitle';
 import { BootstrapVueIcons } from 'bootstrap-vue'
 import 'bootstrap-vue/dist/bootstrap-vue-icons.min.css'
+import {ValidationProvider, ValidationObserver} from "vee-validate";
 
 Vue.use(BootstrapVueIcons)
-
+Vue.component('ValidationProvider', ValidationProvider);
+Vue.component('ValidationObserver', ValidationObserver);
 Vue.component('vue-title', titleComponent);
 
 Vue.use(abilitiesPlugin, ability);

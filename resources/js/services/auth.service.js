@@ -10,7 +10,7 @@ class AuthService {
     }
 
     async logout() {
-        const response = await axios.post('logout');
+        const response = await axios.get('logout');
         return response.data;
     }
 

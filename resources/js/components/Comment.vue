@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="block">
+        <div class="block" :class="{'own-comment': ownComment}">
             <div class="art-post-header-meta">
                 <a class="url" href="#">
                     {{ comment.user.name }}
@@ -12,19 +12,21 @@
             <div class="art-post-content">
                 {{ comment.body }}
             </div>
-
-
             <div class="art-post-evals-footer" >
                 <b-icon-chevron-up variant="info" @click="markHandler(1)"></b-icon-chevron-up>
                 <span v-show="true" :class="{'mark-active': hasPositive}">{{ positiveMarks }}</span>
                 <b-icon-chevron-down variant="danger" @click="markHandler(-1)"></b-icon-chevron-down>
                 <span v-show="true" :class="{'mark-active': hasNegative}">{{ negativeMarks }}</span>
-                <a class="url ">Ответить</a>
+                <a class="url" @click="replayForm = !replayForm">Ответить</a>
             </div>
+        </div>
+        <div class="block" v-if="replayForm">
+            <CommentForm @onSubmit="onCommentFormSubmit" :commented_id="comment.id"/>
         </div>
         <comment v-for="replay in comment.replies"
                  v-if="comment.replies && comment.replies.length"
-                 :key="replay.id" :comment="replay"
+                 :key="replay.id"
+                 :comment="replay"
                  class="replay"
         />
     </div>
@@ -32,16 +34,19 @@
 
 <script>
 import DataService from "../services/data.service";
+import CommentForm from "./CommentForm";
 
 export default {
     name: "comment",
     data() {
         return {
+            replayForm: false,
             positiveMarks: 0,
             negativeMarks: 0,
             hasPositive: false,
             hasNegative: false,
             ownMark_id: null,
+            ownComment: false,
             userId: null
         }
     },
@@ -68,6 +73,14 @@ export default {
                 }
             });
         },
+        replayEvent(){
+          this.replayForm = true;
+        },
+        onCommentFormSubmit(newComment){
+            this.replayForm = false;
+            console.log('New comment in Comment comp', newComment);
+            this.comment.replies.push(newComment); //believe in reactivity
+        },
         markComment(value) {
             return DataService.createMark({
                 markable_type: 'Comment',
@@ -85,6 +98,7 @@ export default {
                  const mark = await this.markComment(value);
                 this.comment.marks.push(mark);
             }
+
             this.init()
         }
     },
@@ -92,7 +106,15 @@ export default {
         if(this.$store.state.auth.status.loggedIn) {
             this.userId = this.$store.state.auth.user.id;
         }
+
+    },
+    mounted() {
+        if(this.userId === this.comment.user?.id)
+            this.ownComment = true;
         this.init();
+    },
+    components: {
+        CommentForm
     }
 }
 </script>
@@ -100,5 +122,8 @@ export default {
 <style scoped>
 .replay {
     margin-left: 40px;
+}
+.own-comment {
+    border-color: lightslategray;
 }
 </style>

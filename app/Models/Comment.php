@@ -14,6 +14,9 @@ class Comment extends Model
         'created_at' => 'datetime:y-m-d hh:mm',
         'updated_at' => 'datetime:Y-m-d hh:mm',
     ];
+    protected $table = 'comments';
+    protected $primaryKey = 'id';
+
     public function marks() {
         return $this->morphMany(Mark::class, 'markable');
     }

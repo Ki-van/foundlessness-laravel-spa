@@ -26,7 +26,7 @@
             <div class="block">
                 <h2 class="art-post-header">
                     <img alt="CROSS" height="32" src="/images/cross.png" width="22">
-                    <a> Описание</a>
+                    <a>Описание</a>
                 </h2>
                 <p class="art-post-content">{{ article.description }}</p>
             </div>
@@ -74,7 +74,7 @@ export default {
         },
         commentsTotal() {
             let counter = (comment) => {
-                if (comment.replies.lenght === 0)
+                if (!comment.replies || comment.replies.length === 0)
                     return 1;
                 else {
                     return comment.replies.reduce((partialTotal, currentComment) => partialTotal + counter(currentComment) + 1, 0)

@@ -55,6 +55,11 @@ class DataService {
         return response.data.data;
     }
 
+    async createComment(comment) {
+        const response = await axios.post('/api/comment', comment);
+        if(response.data && response.data)
+            return response.data.data;
+    }
 }
 
 export default new DataService();
