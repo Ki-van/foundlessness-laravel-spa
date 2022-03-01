@@ -32,10 +32,11 @@
             </div>
             <div class="block">
                 <Editor :article="article" :readonly="true" class="art-post-content" @editorReady="editorReady"/>
-                <div class="art-post-evals-footer">
-                    <span class="domain">
-                        Оценка
-                    </span> <a class="url">{{ marksSum }} </a>
+                <div class="d-inline-flex ">
+                        <MarkControllers :markable="article" :markable_type="'Article'"/>
+                    <div class="art-post-evals-footer">
+                        <a class="url" @click="commentForm = !commentForm">Комментировать</a>
+                    </div>
                 </div>
             </div>
             <div class="block">
@@ -46,6 +47,9 @@
                     </a>
                 </h2>
             </div>
+            <div class="block" v-if="commentForm">
+                <CommentForm @onSubmit="onCommentFormSubmit" :commented_id="article.id"/>
+            </div>
             <CommentsSection :comments="article.comments"/>
         </template>
     </div>
@@ -54,24 +58,26 @@
 <script>
 import Editor from "../components/Editor";
 import CommentsSection from "../components/CommentsSection";
+import MarkControllers from "../components/MarkControllers";
+import CommentForm from "../components/CommentForm";
 
 export default {
     name: "Article",
     components: {
+        CommentForm,
+        MarkControllers,
         Editor,
         CommentsSection
     },
     data() {
         return {
+            commentForm: false,
             article: null,
             loading: false,
             editor: null
         }
     },
     computed: {
-        marksSum() {
-            return this.article.marks.reduce((partialSum, mark) => partialSum + mark.value, 0);
-        },
         commentsTotal() {
             let counter = (comment) => {
                 if (!comment.replies || comment.replies.length === 0)
@@ -84,6 +90,10 @@ export default {
         }
     },
     methods: {
+        onCommentFormSubmit(newComment){
+            this.commentForm = false;
+            this.article.comments.push(newComment);
+        },
         editorReady(editor) {
             this.editor = editor;
         },

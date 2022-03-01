@@ -12,12 +12,12 @@
             <div class="art-post-content">
                 {{ comment.body }}
             </div>
-            <div class="art-post-evals-footer" >
-                <b-icon-chevron-up variant="info" @click="markHandler(1)"></b-icon-chevron-up>
-                <span v-show="true" :class="{'mark-active': hasPositive}">{{ positiveMarks }}</span>
-                <b-icon-chevron-down variant="danger" @click="markHandler(-1)"></b-icon-chevron-down>
-                <span v-show="true" :class="{'mark-active': hasNegative}">{{ negativeMarks }}</span>
-                <a class="url" @click="replayForm = !replayForm">Ответить</a>
+
+            <div class="d-inline-flex">
+                <MarkControllers :markable_type="'Comment'" :markable="comment" />
+                <div class="art-post-evals-footer">
+                    <a class="url" @click="replayForm = !replayForm">Ответить</a>
+                </div>
             </div>
         </div>
         <div class="block" v-if="replayForm">
@@ -35,6 +35,7 @@
 <script>
 import DataService from "../services/data.service";
 import CommentForm from "./CommentForm";
+import MarkControllers from "./MarkControllers";
 
 export default {
     name: "comment",
@@ -78,8 +79,7 @@ export default {
         },
         onCommentFormSubmit(newComment){
             this.replayForm = false;
-            console.log('New comment in Comment comp', newComment);
-            this.comment.replies.push(newComment); //believe in reactivity
+            this.comment.replies.push(newComment);
         },
         markComment(value) {
             return DataService.createMark({
@@ -114,6 +114,7 @@ export default {
         this.init();
     },
     components: {
+        MarkControllers,
         CommentForm
     }
 }
@@ -122,6 +123,7 @@ export default {
 <style scoped>
 .replay {
     margin-left: 40px;
+    border-left: dotted;
 }
 .own-comment {
     border-color: lightslategray;

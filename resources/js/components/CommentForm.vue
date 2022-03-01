@@ -20,7 +20,7 @@ import DataService from "../services/data.service";
 
 extend('required', {
     ...required,
-    message: 'Не оставляйте поля пустыми',
+    message: 'Не оставляйте поле пустыми',
 })
 
 export default {
