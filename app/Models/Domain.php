@@ -8,11 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Domain extends Model
 {
     use HasFactory;
-    protected $fillable = ['slug', 'name', 'description'];
+    protected $fillable = ['id','name', 'description'];
+    protected $table = 'domains';
+    protected $keyType = 'string';
 
     public function articles()
     {
-        $this->hasMany(Article::class, 'domain_id');
+       return $this->hasMany(Article::class, 'domain_id');
     }
 
 }

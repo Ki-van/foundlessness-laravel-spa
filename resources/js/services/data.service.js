@@ -4,7 +4,7 @@ class DataService {
     async getDomains() {
         const response = await axios.get('/api/domain');
         if(response && response.data)
-            return response.data;
+            return response.data.data;
         else throw new Error('Domain fetch failed');
     }
 
@@ -47,6 +47,14 @@ class DataService {
             return response.data.data;
         else
             throw new Error('No article with such id was found');
+    }
+
+    async getDomain(id) {
+        const response = await axios.get(`/api/domain/${id}`);
+        if(response && response.data)
+            return response.data.data;
+        else
+            throw new Error('No domain with such id was found');
     }
 
     async getArticles(params) {

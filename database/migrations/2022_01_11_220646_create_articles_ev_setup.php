@@ -22,8 +22,7 @@ class CreateArticlesEvSetup extends Migration
         });
 
         Schema::create('domains', function (Blueprint $table) {
-            $table->id('id');
-            $table->string('slug')->nullable();
+            $table->string('id')->primary();
             $table->string('description');
             $table->string('name');
         });
@@ -42,8 +41,10 @@ class CreateArticlesEvSetup extends Migration
                 ->constrained('article_statuses')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-            $table->foreignId('domain_id')
-                ->constrained('domains')
+            $table->string('domain_id');
+            $table->foreign('domain_id')
+                ->references('id')
+                ->on('domains')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
             $table->string('slug', 63)->nullable();

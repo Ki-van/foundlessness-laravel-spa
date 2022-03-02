@@ -17,27 +17,27 @@ class DomainSeeder extends Seeder
     {
         $domains = [
             [
-                'slug' => 'out_of_domain',
+                'id' => 'out_of_domain',
                 'name' => 'Вне области',
                 'description' => 'Статьи, которые не попадают ни под один предоставленный домен',
             ],
             [
-                'slug' => 'math',
+                'id' => 'math',
                 'name' => 'Математика',
                 'description' => 'Всевозможное использование чисел и форм',
             ],
             [
-                'slug' => 'philosophy_of_it',
+                'id' => 'philosophy_of_it',
                 'name' => 'Философия программирования',
                 'description' => 'То же что и философия, только про программирование',
             ],
             [
-                'slug' => 'philosophy',
+                'id' => 'philosophy',
                 'name' => 'Философия',
                 'description' => 'Наиболее категоричные рассуждения и знания. Познание',
             ],
             [
-                'slug' => 'it',
+                'id' => 'it',
                 'name' => 'Информационные технологии',
                 'description' => 'Методологии обработки информации',
             ],

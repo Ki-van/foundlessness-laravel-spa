@@ -17,9 +17,9 @@ class ArticlePolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $user)
+    public function viewAny(?User $user)
     {
-        return $user->isAdmin();
+        return true;
     }
 
     /**
@@ -29,9 +29,9 @@ class ArticlePolicy
      * @param  \App\Models\Article  $article
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Article $article)
+    public function view(?User $user, Article $article)
     {
-        return $article->status()->status === 'published' || $user->isAuthor($article);
+        return $article->status()->first()->status === 'published' || ($user && $user->isAuthor($article));
     }
 
     /**

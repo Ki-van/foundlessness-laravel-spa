@@ -5,12 +5,14 @@
                 <router-link :to="{name: 'home'}">Главная</router-link>
             </li>
             <li><span class="menu-separator"></span></li>
-            <li class="menu-item"><a href="/domains">Области знаний</a></li>
+            <li class="menu-item"><router-link :to="{name: 'domains'}">Области знаний</router-link></li>
             <li><span class="menu-separator"></span></li>
             <li class="menu-item"><a href="#">Прогресс</a></li>
             <li><span class="menu-separator"></span></li>
-            <li class="menu-item"><a href="participation">Участие</a></li>
+            <li class="menu-item"><a href="">Участие</a></li>
             <li><span class="menu-separator"></span></li>
+            <li class="menu-item"><router-link :to="{name: 'about'}">О ПСИХ</router-link></li>
+<!--            <li><span class="menu-separator"></span></li>
             <li class="menu-item">
                 <div class="menu-dropdown">
                     <a href="../About.html">О ПСИХ</a>
@@ -20,7 +22,7 @@
                         <a>Карта сайта</a>
                     </div>
                 </div>
-            </li>
+            </li>-->
 
             <li><span class="menu-separator" v-if="$can('manage', 'all')"></span></li>
             <li class="menu-item" v-if="$can('manage', 'all')">

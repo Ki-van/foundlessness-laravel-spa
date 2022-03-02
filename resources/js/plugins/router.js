@@ -12,6 +12,20 @@ const routes = [
         component: Home
     },
     {
+        name: 'about',
+        path: '/about',
+        component: () => import('../pages/About')
+    },
+    {
+        name: 'domains',
+        path: '/domains',
+        component: () => import('../pages/Domains'),
+    },
+    {
+        path: '/domains/:id',
+        component: () => import('../pages/Domain')
+    },
+    {
       name: 'article',
       path: '/article/:id',
       component: () => import('../pages/Article')

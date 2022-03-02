@@ -23,11 +23,19 @@ class ArticleController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
-        return ArticleResource::collection(Article::orderByDesc('created_at')->get());
+        /*$request->validate([
+           'status'=>'sometimes|require|exists:article_statuses,status',
+           'user_id'=>'sometimes|require|exists:users,id'
+        ]);*/
+
+        return ArticleResource::collection(
+            Article::where('article_status_id', '=', ArticleStatus::PUBLISHED_ID)
+            ->orderByDesc('created_at')
+                ->get());
     }
 
     /**
@@ -50,7 +58,7 @@ class ArticleController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Article  $article
-     * @return \Illuminate\Http\Response
+     * @return ArticleResource
      */
     public function show(Article $article)
     {

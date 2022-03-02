@@ -31,7 +31,13 @@ class ArticleFactory extends Factory
                     "version" => "2.23.2"
                 ])
             ],
-            'domain_id' => $this->faker->randomElement([1, 2, 3, 4, 5]),
+            'domain_id' => $this->faker->randomElement([
+                'out_of_domain',
+                'math',
+                'philosophy_of_it',
+                'philosophy',
+                'it'
+            ]),
             'article_status_id' => $this->faker->randomElement(ArticleStatus::all('id')
                 ->map(fn($val) => $val['id'])->toArray()),
             'user_id' => User::factory()->hasAttached(Role::findByName('User')),

@@ -63,7 +63,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return $user->with('roles')->with('permissions');
+        return $user->with('roles')->with('permissions')->with('articles');
     }
 
     /**

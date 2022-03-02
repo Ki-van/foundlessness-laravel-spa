@@ -19,6 +19,30 @@ export const article = {
                 }
             );
         },
+        getDomains({commit}, params = null, fresh = false) {
+            if(this.state.domains && !fresh)
+                return this.state.domains;
+            else {
+                return DataService.getDomains(params).then(
+                    domains => {
+
+                        commit('setDomains', domains.sort((a, b) => b.articles.length - a.articles.length));
+                        return Promise.resolve(domains);
+                    },
+                    error => {
+                        return Promise.reject(error);
+                    }
+                );
+            }
+        },
+        getDomain({commit}, id) {
+            let domain =  this.state.article.domains?.filter(domain => domain.id === id)[0]
+            if(domain)
+                return domain;
+            else {
+                return DataService.getDomain(id)
+            }
+        },
         getArticle({commit}, id) {
             let article =  this.state.article.articles?.filter(article => article.id === id)[0]
             if(article)

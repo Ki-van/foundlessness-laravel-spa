@@ -1,7 +1,7 @@
 <template>
     <div class="block">
         <h2 class="art-post-header">
-            <img src="images/cross.png" alt="CROSS" width="22" height="32">
+            <img src="/images/cross.png" alt="CROSS" width="22" height="32">
             <router-link :to= "link">
                {{article.heading}}
             </router-link>
@@ -41,7 +41,6 @@
 </template>
 
 <script>
-import {article} from "../store/article.module";
 
 export default {
     name: "ArticlePreview",
