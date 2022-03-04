@@ -24,7 +24,7 @@ export default {
     computed: {
         link(){
             return '/domains/' + this.domain.id;
-        },
+        }
     },
 }
 </script>

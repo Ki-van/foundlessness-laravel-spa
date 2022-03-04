@@ -3,9 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RegisterRequest;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -22,7 +27,7 @@ class RegisterController extends Controller
     |
     */
 
-    use RegistersUsers;
+   // use RegistersUsers;
 
     /**
      * Where to redirect users after registration.
@@ -42,19 +47,31 @@ class RegisterController extends Controller
     }
 
     /**
-     * Get a validator for an incoming registration request.
+     * Handle a registration request for the application.
      *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
+     * @param RegisterRequest $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
-    protected function validator(array $data)
+    public function register(RegisterRequest $request)
     {
-        return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+        event(new Registered($user = $this->create($request->all())));
+        //$user->hasRole([''])
+        //$this->guard()->login($user);
+
+        return new JsonResponse([], 201);
     }
+
+    /**
+     * Get the guard to be used during registration.
+     *
+     * @return \Illuminate\Contracts\Auth\StatefulGuard
+     */
+    protected function guard(): \Illuminate\Contracts\Auth\StatefulGuard
+    {
+        return Auth::guard();
+    }
+
 
     /**
      * Create a new user instance after a valid registration.

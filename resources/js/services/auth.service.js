@@ -3,10 +3,9 @@ import axios from 'axios';
 class AuthService {
     async login(credentials) {
         await axios.get('/sanctum/csrf-cookie');
-        const response = await axios.post('/login', credentials);
-        if(response && response.data)
-            return response.data.data;
-         else throw new Error('Login failed');
+        return  await axios.post('/login', credentials,{
+            validateStatus: status => status >= 200 && status < 300 || status === 422
+        });
     }
 
     async logout() {
@@ -14,11 +13,10 @@ class AuthService {
         return response.data;
     }
 
-    register(user) {
-        return axios.post( 'register', {
-            username: user.username,
-            email: user.email,
-            password: user.password
+    async register(user) {
+        await axios.get('/sanctum/csrf-cookie');
+        return await axios.post('/register', user, {
+            validateStatus: status => status >= 200 && status < 300 || status === 422
         });
     }
 }

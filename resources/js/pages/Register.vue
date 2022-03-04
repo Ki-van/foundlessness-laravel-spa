@@ -1,42 +1,48 @@
 <template>
-    <ValidationObserver v-slot="{ handleSubmit }">
-        <form class="container w-50" @submit.prevent="handleSubmit(register)">
+    <ValidationObserver v-slot="{ invalid }">
+        <form class="container w-50" @submit.prevent="register">
             <div class="form-group">
-                <ValidationProvider rules="alpha_num|required" v-slot="{ errors }">
+                <ValidationProvider v-slot="{ errors }" rules="alpha_num|required">
                     <label for="name">Имя</label>
-                    <input v-model="name"  id="name">
+                    <input id="name" v-model="name">
                     <span style="color: wheat">{{ errors[0] }}</span>
                 </ValidationProvider>
+                <span style="color: wheat" v-if="serverErrors">{{ serverErrors.name ? serverErrors.name[0] : '' }}</span>
             </div>
             <div class="form-group ">
-                <ValidationProvider rules="email|required" v-slot="{ errors }">
+                <ValidationProvider v-slot="{ errors }" rules="email|required">
                     <label for="email">Почта</label>
-                    <input v-model="email" id="email">
-                    <span style="color: wheat">{{ errors[0] }}</span>
+                    <input id="email" v-model="email">
+                    <span style="color: wheat">
+                        {{ errors[0] }}
+                    </span>
                 </ValidationProvider>
+                <span style="color: wheat" v-if="serverErrors">{{ serverErrors.email ? serverErrors.email[0] : '' }}</span>
             </div>
             <div class="form-group">
-                <ValidationProvider rules="min:6|required" v-slot="{ errors }">
+                <ValidationProvider v-slot="{ errors }" rules="min:6|required">
                     <label for="password">Пароль</label>
-                    <input type="password" v-model="password" id="password">
+                    <input id="password" v-model="password" type="password">
                     <span style="color: wheat">{{ errors[0] }}</span>
                 </ValidationProvider>
             </div>
             <div class="form-group">
-                <ValidationProvider rules="is:password|required" v-slot="{ errors }">
-                    <label for="password_confirm">Пароль</label>
-                    <input type="password" v-model="password_confirm"  id="password_confirm">
+                <ValidationProvider v-slot="{ errors }" :rules="{is: password}">
+                    <label for="password_confirm">Подтверждение пароля</label>
+                    <input id="password_confirm" v-model="password_confirmation" type="password">
                     <span style="color: wheat">{{ errors[0] }}</span>
                 </ValidationProvider>
             </div>
-            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+            <LoadingButton :disabled="invalid" :loading="loading" :loading-text="'Регистрация...'"
+                           :text="'Зарегистрироваться'" :type="'submit'"/>
         </form>
     </ValidationObserver>
 </template>
 
 <script>
-import {extend, ValidationObserver, ValidationProvider} from "vee-validate";
+import {extend} from "vee-validate";
 import {required, email, alpha_num, min, is} from 'vee-validate/dist/rules';
+import LoadingButton from "../components/LoadingButton";
 
 extend('email', {
     ...email,
@@ -44,54 +50,62 @@ extend('email', {
 })
 extend('required', {
     ...required,
-    message: 'Поле {_field_} пусто',
+    message: 'Поле пусто',
+})
+extend('is', {
+    ...is,
+    message: 'Пароли не совпадают',
 })
 extend('alpha_num', {
     ...alpha_num,
-    message: 'Только буквы и цифры',
+    message: 'Используйте только буквы и цифры',
 })
 extend('min', {
-    validate(value, { length }) {
+    validate(value, {length}) {
         return value.length >= length;
     },
     params: ['length'],
-    message: 'Поле {_field_} должно быть как минимум {length} символов'
+    message: 'Минимум {length} символов'
 });
 
 export default {
     name: "Register",
-    components: {
-      ValidationObserver,
-      ValidationProvider
-    },
+    components: {LoadingButton},
     data() {
         return {
+            loading: false,
             name: "",
             email: "",
             password: "",
-            password_confirm: "",
-            error: null
+            password_confirmation: "",
+            serverErrors: {}
         }
     },
     methods: {
-        register() {
-            axios.get('/sanctum/csrf-cookie').then(response => {
-                axios.post('api/register', {
+       async register() {
+            this.loading = true;
+            try {
+                const response = await this.$store.dispatch('auth/register', {
                     name: this.name,
                     email: this.email,
-                    password: this.password
-                })
-                    .then(response => {
-                        if (response.data.success) {
-                            window.location.href = "/login"
-                        } else {
-                            this.error = response.data.message
-                        }
-                    })
-                    .catch(function (error) {
-                        console.error(error);
-                    });
-            })
+                    password: this.password,
+                    password_confirmation: this.password_confirmation
+                });
+                console.log('Response register success: ', response);
+
+                this.$toasted.show("Регистрация прошла успешно", {
+                    theme: "toasted-primary",
+                    position: "bottom-left",
+                    duration: 1500
+                });
+                setTimeout(() => {
+                    this.$router.push('/login');
+                }, 1500);
+            }catch (error){
+                this.serverErrors = error.errors;
+            }finally {
+                this.loading = false
+            }
         }
     }
 }
@@ -100,13 +114,13 @@ export default {
 <style scoped>
 input {
     --bs-bg-opacity: 1;
-    background-color: rgba(var(--bs-dark-rgb),var(--bs-bg-opacity));
+    background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity));
     --bs-text-opacity: 1;
-    color: rgba(var(--bs-white-rgb),var(--bs-text-opacity));
-    padding-right: 0.5rem!important;
-    padding-left: 0.5rem!important;
-    margin-top: 0.25rem!important;
-    margin-bottom: 0.25rem!important;
-    width: 100%!important;
+    color: rgba(var(--bs-white-rgb), var(--bs-text-opacity));
+    padding-right: 0.5rem !important;
+    padding-left: 0.5rem !important;
+    margin-top: 0.25rem !important;
+    margin-bottom: 0.25rem !important;
+    width: 100% !important;
 }
 </style>

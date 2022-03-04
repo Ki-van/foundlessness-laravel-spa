@@ -69,7 +69,7 @@
                                       color="white"
                                       item-color="white"
                                       item-text="name"
-                                      item-value="slug"
+                                      item-value="id"
                                       label="Область знания"
                                       return-object
                                       single-line
@@ -109,10 +109,9 @@
 
 <script>
 import Editor from "../components/Editor";
-import {extend, ValidationObserver, ValidationProvider} from "vee-validate";
+import {extend} from "vee-validate";
 import {min, required} from "vee-validate/dist/rules";
 import DataService from "../services/data.service";
-import article from "./Article";
 
 extend('required', {
     ...required,
@@ -213,9 +212,7 @@ export default {
         this.init();
     },
     components: {
-        Editor,
-        ValidationProvider,
-        ValidationObserver
+        Editor
     }
 }
 </script>

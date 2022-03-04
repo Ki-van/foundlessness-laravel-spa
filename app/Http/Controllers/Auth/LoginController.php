@@ -38,20 +38,16 @@ class LoginController extends Controller
     /**
      * Handle an authentication attempt.
      */
-    public function login(Request $request)
+    /**
+     * The user has been authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function authenticated(Request $request, $user)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-            'remember'=> ['nullable', 'boolean']
-        ]);
-
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-
-            return new UserResource(Auth::user());
-        }
-
-        throw new AuthenticationException();
+        //set user roles
+        return new UserResource($user);
     }
 }

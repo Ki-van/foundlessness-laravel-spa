@@ -1,39 +1,37 @@
 <template>
-    <div class="container">
-        <header class="jumbotron">
-            <h3>
-                <strong>{{currentUser.name}}</strong> Profile
-            </h3>
-        </header>
-        <p>
-            <strong>Id:</strong>
-            {{currentUser.id}}
-        </p>
-        <p>
-            <strong>Email:</strong>
-            {{currentUser.email}}
-        </p>
-        <strong>Authorities:</strong>
-        <ul>
-            <li v-for="(role,index) in currentUser.roles" :key="index">{{role}}</li>
-        </ul>
-        <p>Abilitys:</p>
-        <p>
-            {{this.$ability.rules}}
-            {{$can('manage', 'all')}}
-        </p>
+    <div>
+        <div class="block">
+            <h2 class="art-post-header">
+                <img src="/images/cross.png" alt="CROSS" width="22" height="32">
+                <a class="url" href="">
+                    {{user.name}}
+                </a>
+            </h2>
+
+        </div>
+        <div class="block">
+            <h2 class="art-post-header">
+                <img src="/images/cross.png" alt="CROSS" width="22" height="32">
+                <a class="url" href="">
+                    Публикации
+                </a>
+            </h2>
+        </div>
+        <ArticlePreview v-for="article in user.articles" :article="article" :key="article.id"/>
     </div>
 </template>
 <script>
+import ArticlePreview from "../components/ArticlePreview";
 export default {
     name: 'Profile',
+    components: {ArticlePreview},
     computed: {
-        currentUser() {
+        user() {
             return this.$store.state.auth.user;
         }
     },
     mounted() {
-        if (!this.currentUser) {
+        if (!this.user) {
             this.$router.push('/login');
         }
     }

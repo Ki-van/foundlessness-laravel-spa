@@ -1,4 +1,5 @@
 import AuthService from '../services/auth.service';
+import axios from "axios";
 
 const user = window.user;
 const initialState = user ?
@@ -20,10 +21,15 @@ export const auth = {
     state: {...initialState},
     actions: {
         login({commit}, credentials) {
-             return AuthService.login(credentials).then(
-                user => {
-                    commit('loginSuccess', user);
-                    return Promise.resolve(user);
+            return AuthService.login(credentials).then(
+                response => {
+                    if(response.status === 422) {
+                        commit('loginFailure')
+                        return Promise.reject('Пользователь или пароль неверен')
+                    }
+
+                    commit('loginSuccess', response.data.data);
+                    return Promise.resolve(response.data.data);
                 },
                 error => {
                     commit('loginFailure');
@@ -43,16 +49,18 @@ export const auth = {
             );
         },
         register({commit}, user) {
-            return AuthService.register(user).then(
-                response => {
+            return AuthService.register(user)
+                .catch(function (error) {
+                console.log('Module error', error);
+                commit('registerFailure');
+                return Promise.reject(error.response);
+            }).then(function (response) {
+                    if (response.status === 422)
+                        return Promise.reject(response.data);
+                    console.log('register success');
                     commit('registerSuccess');
-                    return Promise.resolve(user);
-                },
-                error => {
-                    commit('registerFailure');
-                    return Promise.reject(error);
-                }
-            );
+                    return Promise.resolve(response.data);
+                })
         }
     },
     mutations: {

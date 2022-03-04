@@ -1,10 +1,10 @@
 <template>
     <ValidationObserver v-slot="{ handleSubmit }">
-        <form class="container w-50" @submit.prevent="handleSubmit(login)">
+        <form class="container w-50" @submit.prevent="handleSubmit(onSubmit)">
             <div class="form-group ">
                 <ValidationProvider rules="email|required" v-slot="{ errors }">
                     <label for="email">Почта</label>
-                    <input v-model="email"  id="email">
+                    <input v-model="auth.email"  id="email">
                     <span style="color: wheat">{{ errors[0] }}</span>
                 </ValidationProvider>
             </div>
@@ -12,7 +12,7 @@
             <div class="form-group">
                 <ValidationProvider rules="required" v-slot="{ errors }">
                     <label for="password">Пароль</label>
-                    <input type="password" v-model="password"  id="password">
+                    <input type="password" v-model="auth.password"  id="password">
                     <span style="color: wheat">{{ errors[0] || message}}</span>
                 </ValidationProvider>
             </div>
@@ -32,7 +32,8 @@
 
 <script>
 import {required, email} from 'vee-validate/dist/rules'
-import {ValidationObserver, ValidationProvider, extend} from "vee-validate";
+import {extend} from "vee-validate";
+import {mapActions} from 'vuex';
 
 extend('email', {
     ...email,
@@ -43,47 +44,37 @@ extend('required', {
     message: 'Поле {_field_} пусто',
 })
 export default {
-    components: {
-        ValidationProvider,
-        ValidationObserver
-    },
     name: "Login",
     data() {
         return {
-            email: "",
-            password: "",
+            auth: {
+                email: "",
+                password: "",
+            },
             loading: false,
             message: ""
         }
     },
     methods: {
-        login() {
+        ...mapActions({
+            login:'auth/login'
+        }),
+        async onSubmit() {
             this.loading = true;
-            this.$store.dispatch('auth/login', {
-                email: this.email,
-                password: this.password
-            }).then(
-                (user) => {
-                    let rules = [];
-                    if (user.roles[0].name === 'Admin')
-                        rules = [{subject: 'all', action: 'manage'}];
-                    else
-                        rules = [{subject: 'all', actions: user.roles.map((rule) => rule.permissons).join()}];
-                    this.$ability.update(rules);
-
-                    this.$router.push('/profile');
-                },
-                error => {
-                    this.loading = false;
-                    if(this.$store.state.auth.errors)
-                        this.message = this.$store.state.auth.errors;
-                    else
-                        this.message =
-                            (error.response && error.response.data) ||
-                            error.message ||
-                            error.toString();
-                }
-            );
+            try {
+                const user = await this.login(this.auth)
+                let rules = [];
+                if (user.roles[0].name === 'Admin')
+                    rules = [{subject: 'all', action: 'manage'}];
+                else
+                    rules = [{subject: 'all', actions: user.roles.map((rule) => rule.permissons).join()}];
+                this.$ability.update(rules);
+                this.$router.push('/profile');
+            }catch(e) {
+                this.message = e;
+            }finally {
+                this.loading = false;
+            }
         }
     }
 }

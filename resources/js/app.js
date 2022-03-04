@@ -19,7 +19,7 @@ Vue.component('ValidationObserver', ValidationObserver);
 Vue.component('vue-title', titleComponent);
 
 Vue.use(abilitiesPlugin, ability);
-
+Vue.use(Toasted);
 
 new Vue({
     el: '#app',

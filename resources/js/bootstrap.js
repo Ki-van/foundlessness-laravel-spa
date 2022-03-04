@@ -22,14 +22,6 @@ window.axios.interceptors.response.use({}, error => {
        router.push({name: 'login'});
 });
 
-axios.interceptors.response.use(response => {
-    return response;
-}, error => {
-    if (error.response.status === 401) {
-
-    }
-    return error;
-});
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting

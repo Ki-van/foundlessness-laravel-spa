@@ -28,7 +28,7 @@ class StoreArticleRequest extends FormRequest
             'heading' => 'required|max:255',
             'description' => 'required|min:20|max:511|unique:App\Models\Article',
             'body' => 'required',
-            'domain_id' => 'nullable|numeric|exists:domains,id',
+            'domain_id' => 'required|exists:domains,id',
             'tag_ids' => 'nullable|array',
             'tag_ids.*' => 'exists:tags, id'
         ];

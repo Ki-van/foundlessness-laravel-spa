@@ -1,5 +1,5 @@
 <template>
-    <button class="btn btn-dark" :type="type">
+    <button class="btn btn-dark" :type="type" :disabled="disabled">
         <span v-show="!loading"> {{ text }}  </span>
         <span v-show="loading" aria-hidden="true" class="spinner-border spinner-border-sm" role="status"></span>
         <span v-show="loading" class="sr-only">{{ loadingText }}</span>
@@ -22,6 +22,10 @@ export default {
         loadingText: {
             type: String,
             default: 'Отправка'
+        },
+        disabled: {
+            type: Boolean,
+            default: false
         }
     }
 }

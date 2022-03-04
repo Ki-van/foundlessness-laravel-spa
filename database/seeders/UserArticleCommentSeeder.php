@@ -33,7 +33,8 @@ class UserArticleCommentSeeder extends Seeder
         /**
          * @var $user User
          */
-        $user = User::factory()->create([
+        $user = User::factory()
+            ->has(Article::factory(3))->create([
             'name' => 'kivan',
             'email'=>'kirill.ivanin00@yandex.ru',
             'password' => Hash::make('kivan',),

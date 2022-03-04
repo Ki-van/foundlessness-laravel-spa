@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Article extends Model
 {
     use HasFactory;
-    protected $fillable = ['heading', 'description', 'body', 'slug', 'article_status_id', 'domain_slug', 'user_id'];
+    protected $fillable = ['heading', 'description', 'body', 'slug', 'article_status_id', 'domain_id', 'user_id'];
     protected $casts = [
         'body' => 'array',
         'created_at' => 'datetime:Y-m-d',

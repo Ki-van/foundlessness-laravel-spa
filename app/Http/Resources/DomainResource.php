@@ -17,7 +17,6 @@ class DomainResource extends JsonResource
     {
         return  [
             'id' => $this->id,
-            'slug' => $this->slug,
             'description' => $this->description,
             'name' => $this->name,
             'articles' => $this->articles()->where('article_status_id', '=', ArticleStatus::PUBLISHED_ID)->get('id')
