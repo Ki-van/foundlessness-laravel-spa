@@ -22,6 +22,7 @@ const routes = [
         component: () => import('../pages/Domains'),
     },
     {
+        name: 'domains.view',
         path: '/domains/:id',
         component: () => import('../pages/Domain')
     },
