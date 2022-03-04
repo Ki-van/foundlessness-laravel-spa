@@ -1,8 +1,6 @@
-class InitiateTool {
+class EmptyTool {
     constructor({data, api,config, readOnly, block}){
         this.readOnly = readOnly;
-        api.blocks.insert('header', { level: 1, text: "Главный заголовок"}, {placeholder: "Enter main heading"});
-        api.blocks.insert('paragraph', {text: "Бредни сюда..."}, {},);
     }
 
     /**
@@ -15,4 +13,4 @@ class InitiateTool {
     }
 }
 
-module.exports = InitiateTool;
+module.exports = EmptyTool;

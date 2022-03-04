@@ -8,6 +8,7 @@ import Header from "@editorjs/header";
 import Image from "@editorjs/image"
 import List from "@editorjs/list";
 import InitiateTool from "../plugins/editorjs/InitiateTool"
+import EmptyTool from "../plugins/editorjs/EmptyTool"
 export default {
     name: 'Editor',
     data() {
@@ -18,7 +19,10 @@ export default {
     },
     props: {
         article: Object,
-        readonly: Boolean
+        readonly: {
+            type: Boolean,
+            default: false
+        }
     },
     methods: {
         init() {
@@ -33,7 +37,7 @@ export default {
                     list: {
                         class: List
                     },
-                    init: this.article?()=>null:InitiateTool,
+                    init: this.article?EmptyTool:InitiateTool,
                     image: {
                         class: Image,
                         config: {
@@ -60,7 +64,7 @@ export default {
                     }
                 },
                 data: this.article? this.article.body : this.defaultMarkup,
-                readOnly: this.readOnly? this.readOnly : false,
+                readOnly: this.readonly,
                 onReady: () => this.$emit('editorReady', this.editorInstance)
             });
         }
