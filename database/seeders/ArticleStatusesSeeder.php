@@ -19,7 +19,6 @@ class ArticleStatusesSeeder extends Seeder
             'published',
             'moderated',
             'hidden',
-            'deleted',
             'creating'
         ];
 

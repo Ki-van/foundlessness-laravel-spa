@@ -1,10 +1,17 @@
 <template>
     <div class="block">
-        <h2 class="art-post-header">
-            <img src="/images/cross.png" alt="CROSS" width="22" height="32">
-            <router-link :to= "link">
-               {{article.heading}}
-            </router-link>
+        <h2 class="art-post-header d-flex justify-content-between">
+            <div>
+                <img src="/images/cross.png" alt="CROSS" width="22" height="32">
+                <router-link :to= "link">
+                    {{article.heading}}
+                </router-link>
+            </div>
+            <div v-if="displayVersionUp && (article.user.id === user.id || $can('manage', 'all'))">
+                <router-link :to="String('sandbox/' + article.id)">
+                    <b-icon-arrow-up-square style="color: white" />
+                </router-link>
+            </div>
         </h2>
         <div class="art-post-header-meta">
             <span>Опубликовано</span>
@@ -20,13 +27,23 @@
         <div class="art-postmetadatafooter">
             <span class="domain">
                 Опубликовано в
-            </span> <a class="url">{{article.domain.name}} </a>|
-            <span class="tag">
-                Теги
-            </span>
-            <template v-for="(tag, index) in article.tags">
-                <a class="url">{{ tag.name }}</a>
-                {{index === article.tags.length -1?'':', '}}
+            </span> <a class="url">{{article.domain.name}} </a>
+            <template v-if="article.tags.length > 0">
+                |
+                <span class="tag">
+                    Теги
+                </span>
+                <template v-for="(tag, index) in article.tags">
+                    <a class="url">{{ tag.name }}</a>
+                    {{index === article.tags.length -1?'':', '}}
+                </template>
+            </template>
+            <template v-if="article.status.id !== 1">
+                |
+                <span class="tag">
+                    Статус
+                </span>
+                <a class="url">{{article.status.status}}</a>
             </template>
         </div>
         <div class="art-post-evals-footer">
@@ -41,11 +58,20 @@
 </template>
 
 <script>
-
+import {mapGetters} from 'vuex';
 export default {
     name: "ArticlePreview",
-    props: ['article'],
+    props: {
+        article: Object,
+        displayVersionUp: {
+            type: Boolean,
+            default: false
+        }
+    },
     computed: {
+        ...mapGetters({
+            user: 'auth/user'
+        }),
         marksSum() {
             return this.article.marks.reduce((partialSum, mark) => partialSum + mark.value, 0);
         },

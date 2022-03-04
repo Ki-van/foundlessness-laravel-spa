@@ -28,7 +28,7 @@
         </div>
         <div v-show="stage === 1">
             <div class="block">
-                <Editor class="art-post-content" @editorReady="editorReady"/>
+                <Editor class="art-post-content" @editorReady="editorReady" />
                 <button class="btn btn-dark p-2" @click="toSecondStage">Готов к публикации</button>
             </div>
 
@@ -112,6 +112,7 @@ import Editor from "../components/Editor";
 import {extend} from "vee-validate";
 import {min, required} from "vee-validate/dist/rules";
 import DataService from "../services/data.service";
+import {mapGetters} from "vuex";
 
 extend('required', {
     ...required,
@@ -149,6 +150,11 @@ export default {
                 this.editor.blocks.update(block.id, {text: newVal, level: block.data.level});
             }
         }
+    },
+    computed: {
+      ...mapGetters({
+          getArticleById: 'article/getArticleById'
+      }),
     },
     methods: {
         init() {

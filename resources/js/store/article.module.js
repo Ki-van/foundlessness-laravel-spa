@@ -7,6 +7,16 @@ export const article = {
         domains: null,
         tags: null,
     },
+    getters: {
+      getArticleById: (state) => (id) => {
+          let article =  state.article.articles?.filter(article => article.id === id)[0]
+          if(article)
+              return article;
+          else {
+              return DataService.getArticle(id)
+          }
+      }
+    },
     actions: {
         getArticles({commit}, params = null) {
             return DataService.getArticles(params).then(

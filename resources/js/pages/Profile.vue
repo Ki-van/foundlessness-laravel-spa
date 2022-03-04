@@ -17,7 +17,7 @@
                 </a>
             </h2>
         </div>
-        <ArticlePreview v-for="article in user.articles" :article="article" :key="article.id"/>
+        <ArticlePreview v-for="article in user.articles" :article="article" :key="article.id" :display-version-up="true"/>
     </div>
 </template>
 <script>
