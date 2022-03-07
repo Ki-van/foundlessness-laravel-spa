@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\ArticleStatus;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -16,7 +17,8 @@ class CommentFactory extends Factory
     {
         return [
             'body' => $this->faker->paragraph(2),
-            'user_id' => User::factory()
+            'user_id' => $this->faker->randomElement(ArticleStatus::all('id')
+                ->map(fn($val) => $val['id'])->toArray())
         ];
     }
 }

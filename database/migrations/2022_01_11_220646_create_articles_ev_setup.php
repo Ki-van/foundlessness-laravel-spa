@@ -29,9 +29,6 @@ class CreateArticlesEvSetup extends Migration
 
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
-            $table->string('heading', 255);
-            $table->string('description', 511);
-            $table->jsonb('body');
             $table->foreignId('user_id')
                 ->comment('Author id')
                 ->constrained('users')
@@ -51,6 +48,24 @@ class CreateArticlesEvSetup extends Migration
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
         });
+        Schema::create('versions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('article_id')
+                ->comment('Version-able article')
+                ->constrained('articles')
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
+            $table->foreignId('version_status_id')
+                ->constrained('article_statuses')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+            $table->string('heading', 255);
+            $table->string('description', 511);
+            $table->jsonb('body');
+            $table->string('semver');
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent();
+        });
     }
 
     /**
@@ -60,9 +75,9 @@ class CreateArticlesEvSetup extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('versions');
         Schema::dropIfExists('articles');
         Schema::dropIfExists('domains');
         Schema::dropIfExists('article_statuses');
-        Schema::dropIfExists('evaluables');
     }
 }

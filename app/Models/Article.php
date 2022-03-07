@@ -8,20 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Article extends Model
 {
     use HasFactory;
-    protected $fillable = ['heading', 'description', 'body', 'slug', 'article_status_id', 'domain_id', 'user_id'];
+    protected $fillable = ['slug', 'article_status_id', 'domain_id', 'user_id'];
     protected $casts = [
         'body' => 'array',
         'created_at' => 'datetime:Y-m-d',
         'updated_at' => 'datetime:Y-m-d',
     ];
-
-    public function comments()
-    {
-        return $this->morphMany(Comment::class, 'commentable');
-    }
-    public function marks() {
-        return $this->morphMany(Mark::class, 'markable');
-    }
 
     public function user()
     {
@@ -37,9 +29,27 @@ class Article extends Model
     {
         return $this->belongsTo(ArticleStatus::class, 'article_status_id');
     }
-
     public function tags()
     {
-       return $this->belongsToMany('App\Models\Tag','article_tag','article_id','tag_id');
+        return $this->belongsToMany(Tag::class,'article_tag','article_id','tag_id');
+    }
+    public function versions()
+    {
+        return $this->hasMany(Version::class, 'article_id');
+    }
+
+    public function latestVersion()
+    {
+        return $this->versions()
+            ->where('version_status_id', ArticleStatus::PUBLISHED_ID)
+            ->get()
+            ->sort(function($a, $b){
+            if($a->semver->gt($b->semver))
+                return -1;
+            elseif ($b->semver->gt($a->semver))
+                return 1;
+            else
+                return 0;
+        })->first->toArray();
     }
 }

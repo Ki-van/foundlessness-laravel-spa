@@ -4,7 +4,7 @@
             <div>
                 <img src="/images/cross.png" alt="CROSS" width="22" height="32">
                 <router-link :to= "link">
-                    {{article.heading}}
+                    {{article.latest_public_version.heading}}
                 </router-link>
             </div>
             <div v-if="displayVersionUp && (article.user.id === user.id || $can('manage', 'all'))">
@@ -15,19 +15,19 @@
         </h2>
         <div class="art-post-header-meta">
             <span>Опубликовано</span>
-            <span class="date">{{article.created_at}}</span>
+            <span class="date">{{article.latest_public_version.created_at}}</span>
             |
             <a href="#" class="url">
                 {{article.user.name}}
             </a>
         </div>
         <div class="art-post-content">
-            <p>{{article.description}}</p>
+            <p>{{article.latest_public_version.description}}</p>
         </div>
         <div class="art-postmetadatafooter">
             <span class="domain">
                 Опубликовано в
-            </span> <a class="url">{{article.domain.name}} </a>
+            </span> <router-link class="url" :to="String('/domains/' + article.domain.id)">{{article.domain.name}} </router-link>
             <template v-if="article.tags.length > 0">
                 |
                 <span class="tag">
@@ -43,16 +43,22 @@
                 <span class="tag">
                     Статус
                 </span>
-                <a class="url">{{article.status.status}}</a>
+                <a class="url">{{article.latest_public_version.status.status}}</a>
             </template>
         </div>
-        <div class="art-post-evals-footer">
-            <span class="domain">
-                Оценка
-            </span> <a class="url">{{marksSum}} </a>|
-            <span class="domain">
-                Комментарии
-            </span> <a class="url">{{commentsTotal}} </a>
+        <div class="art-post-evals-footer d-flex justify-content-between">
+            <div>
+                <span class="domain">
+                    Оценка
+                </span> <a class="url">{{marksSum}} </a>|
+                <span class="domain">
+                    Комментарии
+                </span> <a class="url">{{commentsTotal}} </a>
+            </div>
+            <div>
+               <b-icon-journals style="color: white"/>
+                <a class="url">{{article.latest_public_version.semver}} </a>
+            </div>
         </div>
     </div>
 </template>
@@ -73,7 +79,7 @@ export default {
             user: 'auth/user'
         }),
         marksSum() {
-            return this.article.marks.reduce((partialSum, mark) => partialSum + mark.value, 0);
+            return this.article.latest_public_version.marks.reduce((partialSum, mark) => partialSum + mark.value, 0);
         },
         link(){
             return '/article/' + this.article.id;
@@ -88,10 +94,10 @@ export default {
                     }
 
             };
-            if(this.article.comments[0] && this.article.comments[0].replies) {
-                return this.article.comments.reduce((partialTotal, currentComment) => partialTotal + counter(currentComment), 0)
+            if(this.article.latest_public_version.comments[0] && this.article.latest_public_version.comments[0].replies) {
+                return this.article.latest_public_version.comments.reduce((partialTotal, currentComment) => partialTotal + counter(currentComment), 0)
             } else
-                return this.article.comments.length;
+                return this.article.latest_public_version.comments.length;
         }
     }
 }

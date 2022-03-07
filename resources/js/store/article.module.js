@@ -15,7 +15,8 @@ export const article = {
           else {
               return DataService.getArticle(id)
           }
-      }
+      },
+
     },
     actions: {
         getArticles({commit}, params = null) {

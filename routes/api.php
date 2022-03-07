@@ -7,6 +7,7 @@ use App\Http\Controllers\API\DomainController;
 use App\Http\Controllers\API\MarkController;
 use App\Http\Controllers\API\TagController;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\VersionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,3 +37,6 @@ Route::group(['prefix' => 'books', 'middleware' => 'auth:sanctum'], function () 
 
 });
 
+Route::apiResources([
+    'version' => VersionController::class
+]);

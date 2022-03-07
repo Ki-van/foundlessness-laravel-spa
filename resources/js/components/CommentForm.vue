@@ -34,10 +34,19 @@ export default {
     methods: {
       onSubmit(){
             this.loading = true;
-            DataService.createComment({
-                body: this.replayBody,
-                comment_id: this.commented_id,
-            }).then((createdComment)=>{
+            let comment = {
+                body: this.replayBody
+            };
+
+            if(this.commented_id) {
+                comment.comment_id = this.commented_id;
+            }
+            else
+            {
+                comment.commentable_type = this.commentable_type;
+                comment.commentable_id = this.commentable_id;
+            }
+            DataService.createComment(comment).then((createdComment)=>{
                 this.loading = false;
                 console.log('Created comment', createdComment);
                 this.$emit('onSubmit', createdComment);
@@ -45,7 +54,17 @@ export default {
       }
     },
     props: {
-      commented_id: Number
+      commented_id: {
+          type: Number,
+          default: null,
+      },
+      commentable_type: {
+        type: String,
+        default: 'Comment'
+      },
+      commentable_id: {
+          type: Number,
+      },
     },
     components: {
         LoadingButton

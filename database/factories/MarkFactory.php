@@ -16,7 +16,7 @@ class MarkFactory extends Factory
     {
         return [
             'value' => $this->faker->randomElement([1, -1]),
-            'user_id' => $this->faker->unique()->randomElement(User::all()->map(function ($user) {
+            'user_id' => $this->faker->randomElement(User::all()->map(function ($user) {
                 return $user->id;
             })->toArray())
         ];

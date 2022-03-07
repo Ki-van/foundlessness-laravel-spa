@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\Comment;
 use App\Models\Mark;
+use App\Models\Version;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -38,6 +39,8 @@ class MarkController extends Controller
         ]);
         switch ($request->input('markable_type')){
             case 'Comment': $markabkeModel = Comment::class;
+                break;
+            case 'Version': $markabkeModel = Version::class;
                 break;
             default:
                 $markabkeModel = Article::class;

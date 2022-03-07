@@ -2,15 +2,10 @@
 
 namespace App\Http\Resources;
 
-use App\Models\ArticleStatus;
-use App\Models\Comment;
-use App\Models\Domain;
-use App\Models\User;
-use App\Models\Version;
 use DateTime;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ArticleResource extends JsonResource
+class VersionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -22,13 +17,13 @@ class ArticleResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user' => $this->user,
+            'heading' => $this->heading,
+            'description' => $this->description,
+            'body' => $this->body,
+            'comments' => CommentResource::collection($this->comments),
+            'marks' => MarkResource::collection($this->marks),
+            'semver' => (string) $this->semver,
             'status' => $this->status,
-            'tags' => $this->tags,
-            'domain' => $this->domain,
-            'versions' => VersionMiniResource::collection($this->versions()->where('version_status_id', ArticleStatus::PUBLISHED_ID)->get(['id', 'semver'])),
-            'latest_public_version' =>  new VersionResource($this->latestVersion()),
-            'slug' => $this->slug,
             'created_at' => (new DateTime($this->created_at))->format("Y-m-d"),
             'updated_at' => (new DateTime($this->updated_at))->format("Y-m-d"),
         ];

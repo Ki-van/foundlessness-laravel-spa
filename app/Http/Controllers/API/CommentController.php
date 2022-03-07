@@ -7,6 +7,7 @@ use App\Http\Requests\StoreCommentRequest;
 use App\Http\Resources\CommentResource;
 use App\Models\Article;
 use App\Models\Comment;
+use App\Models\Version;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,7 +35,7 @@ class CommentController extends Controller
             'body' => 'required',
             'comment_id' => 'sometimes|required|exists:comments,id',
             'commentable_type' => 'sometimes|required|alpha',
-            'commentable_id' => 'sometimes|required|exists:articles,id'
+            'commentable_id' => 'sometimes|required|exists:versions,id'
         ]);
 
         if($request->has('comment_id'))
@@ -45,7 +46,7 @@ class CommentController extends Controller
 
         switch ($request->input('commentable_type')){
             default:
-                $commentableModel = Article::class;
+                $commentableModel = Version::class;
         }
 
         return new CommentResource($commentableModel::findOrFail($request->input('commentable_id'))

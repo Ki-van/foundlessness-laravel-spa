@@ -317,12 +317,12 @@ h3 {
 
 }
 
-.block li {
+/*.block li {
     background-image: url("/images/crossbullet.png");
     background-repeat: no-repeat;
     padding-left: 13px;
     overflow-y: hidden;
-}
+}*/
 
 .block a {
     text-decoration: none;
