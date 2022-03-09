@@ -26,7 +26,7 @@ class ArticleResource extends JsonResource
             'status' => $this->status,
             'tags' => $this->tags,
             'domain' => $this->domain,
-            'versions' => VersionMiniResource::collection($this->versions()->where('version_status_id', ArticleStatus::PUBLISHED_ID)->get(['id', 'semver'])),
+            'versions' =>  VersionMiniResource::collection($this->versions()->where('version_status_id', ArticleStatus::PUBLISHED_ID)->get(['id', 'semver'])),
             'latest_public_version' =>  new VersionResource($this->latestVersion()),
             'slug' => $this->slug,
             'created_at' => (new DateTime($this->created_at))->format("Y-m-d"),

@@ -8,8 +8,8 @@
                 </router-link>
             </div>
             <div v-if="displayVersionUp && (article.user.id === user.id || $can('manage', 'all'))">
-                <router-link :to="String('sandbox/' + article.id)">
-                    <b-icon-arrow-up-square style="color: white" />
+                <router-link :to="String('/profile/sandbox/' + article.id)">
+                    <b-icon-box-arrow-up-right style="color: white" />
                 </router-link>
             </div>
         </h2>

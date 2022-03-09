@@ -39,12 +39,12 @@ const routes = [
     {
         name: 'profile.sandbox',
         path: '/profile/sandbox',
-        component: () => import('../pages/Sandbox'),
+        component: () => import('../pages/CreateArticle'),
     },
     {
         name: 'profile.sandbox.edit',
         path: '/profile/sandbox/:id',
-        component: () => import('../pages/Sandbox'),
+        component: () => import('../pages/AddVersion'),
     },
     {
         name: 'register',

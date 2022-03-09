@@ -32,6 +32,6 @@ class SemVer implements CastsAttributes
      */
     public function set($model, string $key, $value, array $attributes)
     {
-        return $value->major.".".$value->minor.".".$value->patch;
+        return (string) $value;
     }
 }

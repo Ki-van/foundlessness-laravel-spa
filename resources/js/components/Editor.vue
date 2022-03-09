@@ -25,6 +25,10 @@ export default {
         }
     },
     methods: {
+        reload(){
+          document.getElementById('editorjs').textContent = '';
+          this.init();
+        },
         init() {
            this.editorInstance = new EditorJS({
                 holderId: "editorjs",
@@ -63,7 +67,7 @@ export default {
                         }
                     }
                 },
-                data: this.article? this.article.body : this.defaultMarkup,
+                data: this.article? this.article : this.defaultMarkup,
                 readOnly: this.readonly,
                 onReady: () => this.$emit('editorReady', this.editorInstance)
             });
@@ -71,7 +75,6 @@ export default {
     },
     mounted: function() {
         this.init();
-        console.log('Editor mounted', this.article, this.readonly);
     },
 
 };

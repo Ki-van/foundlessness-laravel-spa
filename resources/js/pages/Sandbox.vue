@@ -26,14 +26,18 @@
                     иглу, занятие интересное, но не для нас. (ДОЗУ)</p>
             </div>
         </div>
-        <div v-show="stage === 1">
+        <div v-if="baseVersion" v-show="stage === 1">
             <div class="block">
-                <Editor class="art-post-content" @editorReady="editorReady" />
+                <p class="art-post-content" v-if="displayBaseVersionVariants">
+                    Базовая версия:
+                    <VersionsDropdown :versions="inArticle.versions" :default="baseVersion" @input="onChangeVersion"/>
+                </p>
+                <Editor :article="baseVersion.body?baseVersion.body:null" class="art-post-content" @editorReady="editorReady"/>
                 <button class="btn btn-dark p-2" @click="toSecondStage">Готов к публикации</button>
             </div>
 
         </div>
-        <div v-show="this.stage === 2" class="block">
+        <div v-if="this.stage === 2" class="block">
             <div class="block">
                 <h2 class="art-post-header">
                     <img alt="CROSS" height="32" src="/images/cross.png" width="22">
@@ -44,42 +48,42 @@
             </div>
 
             <ValidationObserver v-slot="{ handleSubmit }">
-                <form class="container w-50" @submit.prevent="handleSubmit(createArticle)">
+                <form class="container w-50" @submit.prevent="handleSubmit(submit)">
                     <div class="form-group ">
                         <ValidationProvider v-slot="{ errors }" rules="required">
                             <label for="heading">Заголовок</label>
-                            <input id="heading" v-model="heading">
+                            <input id="heading" v-model="baseVersion.heading">
                             <span style="color: wheat">{{ errors[0] }}</span>
                         </ValidationProvider>
+                        <span style="color: wheat" v-if="serverErrors">{{ serverErrors.heading ? serverErrors.heading[0] : '' }}</span>
                     </div>
 
                     <div class="form-group">
                         <ValidationProvider v-slot="{ errors }" rules="required|min:30">
-                            <label for="descriptoin">Описание</label>
-                            <textarea id="descriptoin" v-model="description"/>
+                            <label for="description">Описание</label>
+                            <textarea id="description" v-model="baseVersion.description"/>
                             <span style="color: wheat">{{ errors[0] || message }}</span>
                         </ValidationProvider>
+                        <span style="color: wheat" v-if="serverErrors">{{ serverErrors.description ? serverErrors.description[0] : '' }}</span>
                     </div>
 
+
                     <div class="form-group">
-                        <div data-app>
-                            <v-select v-model="selectedDomain"
-                                      :items="domains"
-                                      class="white--text white text--lighten-5"
-                                      color="white"
-                                      item-color="white"
-                                      item-text="name"
-                                      item-value="id"
-                                      label="Область знания"
-                                      return-object
-                                      single-line
-                            />
-                        </div>
+                        <label for="domain">Область знания</label>
+                        <b-form-select
+                            id="domain"
+                            v-model="selectedDomainId"
+                            :options="domains"
+                            class="w-100 mb-3 lg bg-dark text-white"
+                            value-field="id"
+                            text-field="name"
+                            disabled-field="notEnabled"
+                        ></b-form-select>
                     </div>
                     <div class="form-group">
-                        <div app-data>
+                        <div data-app>
                             <v-autocomplete
-                                v-model="selectedTags"
+                                v-model="outArticle.tags"
                                 :items="tags"
                                 chips
                                 dense
@@ -93,13 +97,41 @@
                         </div>
                     </div>
 
-                    <button class="btn btn-dark" type="submit">
-                        <span v-show="!loading"> Отправить на модерацию  </span>
-                        <span v-show="loading" aria-hidden="true" class="spinner-border spinner-border-sm"
-                              role="status"></span>
-                        <span v-show="loading" class="sr-only">Отправка...</span>
-                    </button>
+                    <div class="form-group" v-if="displayBaseVersionVariants">
+                        <label for="semver">Тип версии</label>
+                        <b-form-select
+                            id="semver"
+                            v-model="selectedVersionType"
+                            :options="Array(
+                                {
+                                    name: 'Мажорная',
+                                    value: 'major'
+                                },
+                                {
+                                    name: 'Минорная',
+                                    value: 'minor'
+                                },
+                                {
+                                    name: 'Патч',
+                                    value: 'patch'
+                                })"
+                            class="w-100 mb-1 lg bg-dark text-white"
+                            value-field="value"
+                            text-field="name"
+                            disabled-field="notEnabled"
+                        ></b-form-select>
+                        <span class="art-post-evals-footer" style="color: white">
+                            Следующая <a class="url">{{nextSemver}}</a>
+                        </span>
+                    </div>
 
+                    <LoadingButton
+                        class="mt-2"
+                        :loading="loading"
+                        :loading-text="'Отправка...'"
+                        :text="'Отправить на модерацию'"
+                        :type="'submit'"
+                    />
                 </form>
             </ValidationObserver>
             <button class="btn btn-dark p-2" @click="stage = 1">Назад к публикации</button>
@@ -110,10 +142,13 @@
 <script>
 import Editor from "../components/Editor";
 import {extend} from "vee-validate";
-import {min, required} from "vee-validate/dist/rules";
+import {required} from "vee-validate/dist/rules";
 import DataService from "../services/data.service";
-import {mapGetters} from "vuex";
-
+import {mapActions} from "vuex";
+import {Article} from "../models/Article";
+import LoadingButton from "../components/LoadingButton";
+import VersionsDropdown from "../components/VersionsDropdown";
+import {BFormSelect} from 'bootstrap-vue'
 extend('required', {
     ...required,
     message: 'Поле {_field_} необходимо хоть чем-нибудь заполнить',
@@ -128,86 +163,130 @@ extend('min', {
 
 export default {
     name: "Sandbox",
+    props: {
+        inArticle: {
+            type: Object,
+            default: null,
+        },
+        displayBaseVersionVariants: {
+            type: Boolean,
+            default: false,
+        },
+        serverErrors: {
+            default: null,
+        },
+        created: Boolean
+    },
+
     data() {
         return {
-            article: {},
+            outArticle: null,
+            baseVersion: null,
             editor: null,
             stage: 1,
-            heading: '',
-            description: '',
             loading: false,
             message: '',
             domains: [],
             tags: [],
-            selectedDomain: {},
-            selectedTags: []
-        }
-    },
-    watch: {
-        heading: async function (newVal) {
-            if (this.article.blocks[0].type === 'header') {
-                let block = await this.editor.blocks.getBlockByIndex(0).save();
-                this.editor.blocks.update(block.id, {text: newVal, level: block.data.level});
-            }
+            selectedDomainId: null,
+            selectedVersionType: 'major'
         }
     },
     computed: {
-      ...mapGetters({
-          getArticleById: 'article/getArticleById'
-      }),
+      nextSemver: function () {
+          if(this.displayBaseVersionVariants)
+          {
+              let semver = this.outArticle.latest_public_version.semver.split('.');
+              switch (this.selectedVersionType) {
+                  case "major": semver[0] =  (Number.parseInt(semver[0]) + 1).toString(); break;
+                  case "minor": semver[1] =  (Number.parseInt(semver[1]) + 1).toString(); break;
+                  case "patch": semver[2] =  (Number.parseInt(semver[2]) + 1).toString(); break;
+              }
+              return semver.join('.');
+          } else
+              return '1.0.0'
+      }
+    },
+    watch: {
+        heading: async function (newVal) {
+            if (this.baseVersion.body.blocks[0].type === 'header') {
+                let block = await this.editor.blocks.getBlockByIndex(0).save();
+                this.editor.blocks.update(block.id, {text: newVal, level: block.data.level});
+            }
+        },
+        created: function() {
+            this.loading = false;
+            this.$toasted.show("Публикация отправлена на модерацию", {
+                theme: "toasted-primary",
+                position: "bottom-left",
+                duration: 3000
+            });
+            setTimeout( () => {
+                this.$router.push('/profile')
+            }, 3000);
+        }
     },
     methods: {
-        init() {
-            DataService.getDomains().then(domains => {
-                this.domains = domains;
-                this.selectedDomain = domains[0];
-            });
-            DataService.getTags().then(tags => this.tags = tags);
+        ...mapActions({
+            getTags: 'article/getTags',
+            getDomain: 'article/getDomains',
+        }),
+        onChangeVersion(){
+
+        },
+        setArticle(article) {
+            if (article) {
+                this.outArticle = article;
+                this.baseVersion = article.latest_public_version;
+            } else {
+                this.outArticle = new Article(this.domains[0], [])
+                this.baseVersion = this.outArticle.latest_public_version;
+            }
+            this.selectedDomainId=this.outArticle.domain.id;
+        },
+        async init() {
+            this.domains = await DataService.getDomains();
+            this.tags = await DataService.getTags();
+            this.setArticle(this.inArticle);
         },
         toSecondStage() {
             this.stage = 2;
-            this.editor.save().then((article) => {
-                this.article = article;
-                if (article.blocks[0].type === 'header') {
-                    this.heading = article.blocks[0].data.text;
+            this.editor.save().then((body) => {
+                this.baseVersion.body = body;
+                if (body.blocks[0].type === 'header') {
+                    this.baseVersion.heading = body.blocks[0].data.text;
                 }
             });
         },
         editorReady(editor) {
             this.editor = editor
         },
-        async createArticle() {
+        async submit() {
             this.loading = true;
+
             try {
                 let firstBlock = await this.editor.blocks.getBlockByIndex(0).save();
                 if (firstBlock.tool === 'header') {
                     this.editor.blocks.delete(0);
                 }
-                this.article = await this.editor.save();
+                this.baseVersion.body = await this.editor.save();
 
-                await DataService.createArticle({
-                    heading: this.heading,
-                    description: this.description,
-                    body: this.article,
-                    domain_id: this.selectedDomain.id,
-                    tags_id: this.selectedTags
+                this.$emit('create', {
+                    domain_id: this.selectedDomainId,
+                    tags_id: this.outArticle.tags,
+                    version: {
+                        heading: this.baseVersion.heading,
+                        description: this.baseVersion.description,
+                        body: this.baseVersion.body,
+                        article_id: this.outArticle.id?this.outArticle.id:'',
+                        version_type: this.selectedVersionType,
+                    }
                 });
-
-                this.$toasted.show("Отправлено на модерацию", {
-                    theme: "toasted-primary",
-                    position: "bottom-left",
-                    duration: 1500
-                });
-                setTimeout(() => {
-                    this.$router.push('/profile');
-                }, 1500);
-            } catch(error) {
+            } catch (error) {
                 this.loading = false;
-
                 console.error(error);
                 this.$toasted.show("Не удалось создать публикацию(((", {
                     theme: "toasted-primary",
-                    icon: 'error',
                     position: "bottom-left",
                     duration: 3000
                 });
@@ -218,7 +297,10 @@ export default {
         this.init();
     },
     components: {
-        Editor
+        LoadingButton,
+        Editor,
+        VersionsDropdown,
+        BFormSelect
     }
 }
 </script>

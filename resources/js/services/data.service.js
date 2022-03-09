@@ -16,9 +16,15 @@ class DataService {
     }
 
     async createArticle(article) {
-        const response = await axios.post('/api/article', article);
-        if(response.data)
-            return response.data;
+        return await axios.post('/api/article', article, {
+            validateStatus: status => status >= 200 && status < 300 || status === 422
+        });
+    }
+
+    async createVersion(version) {
+        return await axios.post('/api/version', version, {
+            validateStatus: status => status >= 200 && status < 300 || status === 422
+        });
     }
 
     async createMark(mark) {

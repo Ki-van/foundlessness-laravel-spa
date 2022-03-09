@@ -36,7 +36,7 @@
                 <p class="art-post-content">{{ displayedVersion.description }}</p>
             </div>
             <div class="block">
-                <Editor :article="displayedVersion" :readonly="true" class="art-post-content" @editorReady="editorReady"/>
+                <Editor ref="Editor" :article="displayedVersion.body" :readonly="true" class="art-post-content" @editorReady="editorReady"/>
                 <div class="d-inline-flex ">
                         <MarkControllers :markable="displayedVersion" :markable_type="'Version'"/>
                     <div class="art-post-evals-footer">
@@ -122,6 +122,7 @@ export default {
                     this.loading = false;
                 }
             }
+            this.$refs.Editor.reload();
         },
         async init() {
             this.loading = true;

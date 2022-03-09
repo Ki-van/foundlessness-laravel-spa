@@ -7,17 +7,6 @@ export const article = {
         domains: null,
         tags: null,
     },
-    getters: {
-      getArticleById: (state) => (id) => {
-          let article =  state.article.articles?.filter(article => article.id === id)[0]
-          if(article)
-              return article;
-          else {
-              return DataService.getArticle(id)
-          }
-      },
-
-    },
     actions: {
         getArticles({commit}, params = null) {
             return DataService.getArticles(params).then(
@@ -30,15 +19,58 @@ export const article = {
                 }
             );
         },
+        createArticle({commit}, article){
+            return DataService.createArticle(article).then(
+                response => {
+                    if(response.status === 422) {
+                        return Promise.reject(response.data);
+                    }
+                    return Promise.resolve(response.data.data);
+                },
+                error => {
+                    return Promise.reject(error);
+                }
+            )
+        },
+
+        addVersion({commit}, version){
+            return DataService.createVersion(version).then(
+                response => {
+                    if(response.status === 422) {
+                        return Promise.reject(response.data);
+                    }
+                    commit('addVersion', response.data.data);
+                    return Promise.resolve(response.data.data);
+                },
+                error => {
+                    return Promise.reject(error);
+                }
+            )
+        },
+
         getDomains({commit}, params = null, fresh = false) {
             if(this.state.domains && !fresh)
                 return this.state.domains;
             else {
                 return DataService.getDomains(params).then(
                     domains => {
-
                         commit('setDomains', domains.sort((a, b) => b.articles.length - a.articles.length));
                         return Promise.resolve(domains);
+                    },
+                    error => {
+                        return Promise.reject(error);
+                    }
+                );
+            }
+        },
+        getTags({commit}, params = null, fresh = false) {
+            if(this.state.tags && !fresh)
+                return this.state.tags;
+            else {
+                return DataService.getTags().then(
+                    tags => {
+                        commit('setTags', tags);
+                        return Promise.resolve(tags);
                     },
                     error => {
                         return Promise.reject(error);
@@ -67,6 +99,15 @@ export const article = {
     mutations: {
         setArticles(state, articles) {
             state.articles = articles;
+        },
+        addArticle(state, article) {
+            state.articles.push(article);
+        },
+        addVersion(state, version) {
+            state.articles.find(article => article.id === version.article_id).versions.unshift({
+                id: version.id,
+                semver: version.semver
+            });
         },
         setDomains(state, domains) {
             state.domains = domains;
