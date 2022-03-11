@@ -4,7 +4,7 @@
             <div>
                 <img src="/images/cross.png" alt="CROSS" width="22" height="32">
                 <router-link :to= "link">
-                    {{article.latest_public_version.heading}}
+                    {{displayedVersion.heading}}
                 </router-link>
             </div>
             <div v-if="displayVersionUp && (article.user.id === user.id || $can('manage', 'all'))">
@@ -15,14 +15,14 @@
         </h2>
         <div class="art-post-header-meta">
             <span>Опубликовано</span>
-            <span class="date">{{article.latest_public_version.created_at}}</span>
+            <span class="date">{{displayedVersion.created_at}}</span>
             |
             <a href="#" class="url">
                 {{article.user.name}}
             </a>
         </div>
         <div class="art-post-content">
-            <p>{{article.latest_public_version.description}}</p>
+            <p>{{displayedVersion.description}}</p>
         </div>
         <div class="art-postmetadatafooter">
             <span class="domain">
@@ -43,7 +43,7 @@
                 <span class="tag">
                     Статус
                 </span>
-                <a class="url">{{article.latest_public_version.status.status}}</a>
+                <a class="url">{{displayedVersion.status.status}}</a>
             </template>
         </div>
         <div class="art-post-evals-footer d-flex justify-content-between">
@@ -57,7 +57,7 @@
             </div>
             <div>
                <b-icon-journals style="color: white"/>
-                <a class="url">{{article.latest_public_version.semver}} </a>
+                <a class="url">{{displayedVersion.semver}} </a>
             </div>
         </div>
     </div>
@@ -72,14 +72,15 @@ export default {
         displayVersionUp: {
             type: Boolean,
             default: false
-        }
+        },
+        displayedVersion: Object,
     },
     computed: {
         ...mapGetters({
             user: 'auth/user'
         }),
         marksSum() {
-            return this.article.latest_public_version.marks.reduce((partialSum, mark) => partialSum + mark.value, 0);
+            return this.displayedVersion.marks.reduce((partialSum, mark) => partialSum + mark.value, 0);
         },
         link(){
             return '/article/' + this.article.id;
@@ -94,10 +95,10 @@ export default {
                     }
 
             };
-            if(this.article.latest_public_version.comments[0] && this.article.latest_public_version.comments[0].replies) {
-                return this.article.latest_public_version.comments.reduce((partialTotal, currentComment) => partialTotal + counter(currentComment), 0)
+            if(this.displayedVersion.comments[0] && this.displayedVersion.comments[0].replies) {
+                return this.displayedVersion.comments.reduce((partialTotal, currentComment) => partialTotal + counter(currentComment), 0)
             } else
-                return this.article.latest_public_version.comments.length;
+                return this.displayedVersion.comments.length;
         }
     }
 }

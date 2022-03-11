@@ -22,7 +22,8 @@ export default {
         }),
         async create(article) {
             try {
-               await this.createArticle(article);
+               let article = await this.createArticle(article);
+               this.$store.commit('auth/addArticle', article);
                this.created = true;
             } catch(errors) {
                 this.errors  = errors.errors;

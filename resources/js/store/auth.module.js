@@ -73,6 +73,9 @@ export const auth = {
             state.user = user;
             state.status.loggedIn = true;
         },
+        addArticle(state, article) {
+            state.user.articles.push(article);
+        },
         loginFailure(state) {
             state.status.loggedIn = false;
             state.user = null;

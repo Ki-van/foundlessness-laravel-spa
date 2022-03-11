@@ -37,11 +37,17 @@ class Article extends Model
         return $this->hasMany(Version::class, 'article_id');
     }
 
-    public function latestVersion()
+    public function latestVersion($version_status = ArticleStatus::PUBLISHED_ID)
     {
-        return $this->versions()
-            ->where('version_status_id', ArticleStatus::PUBLISHED_ID)
-            ->get()
+        $versions = null;
+        if($version_status)
+            $versions = $this->versions()
+                ->where('version_status_id', $version_status)
+                ->get();
+        else
+            $versions = $this->versions;
+
+        return $versions
             ->sort(function($a, $b){
             if($a->semver->gt($b->semver))
                 return -1;
