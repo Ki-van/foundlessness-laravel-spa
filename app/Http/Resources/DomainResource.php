@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Models\ArticleStatus;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\DB;
 
 class DomainResource extends JsonResource
 {
@@ -19,7 +20,12 @@ class DomainResource extends JsonResource
             'id' => $this->id,
             'description' => $this->description,
             'name' => $this->name,
-            'articles' => $this->articles()->where('article_status_id', '=', ArticleStatus::PUBLISHED_ID)->get('id')
+            'articles' => $this->articles()->whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('versions')
+                    ->whereRaw('versions.article_id = articles.id')
+                    ->where('versions.version_status_id', ArticleStatus::PUBLISHED_ID);
+            })->get('id')
         ];
     }
 }

@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Models\Version;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 
@@ -36,7 +37,12 @@ class ArticleController extends Controller
         ]);*/
 
         return ArticleResource::collection(
-            Article::where('article_status_id', '=', ArticleStatus::PUBLISHED_ID)
+            Article::whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('versions')
+                    ->whereRaw('versions.article_id = articles.id')
+                    ->where('versions.version_status_id', ArticleStatus::PUBLISHED_ID);
+            })
             ->orderByDesc('created_at')
                 ->get());
     }

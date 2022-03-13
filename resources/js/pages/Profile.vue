@@ -24,6 +24,7 @@
             :display-version-up="true"
             :displayed-version="article.latest_public_version?article.latest_public_version: article.latest_version"
         />
+        <vue-title :title="user.name"></vue-title>
     </div>
 </template>
 <script>

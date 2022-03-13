@@ -4,7 +4,7 @@
             <div class="spinner-border" role="status">
             </div>
         </div>
-        <ArticlePreview v-for="article in articles" :key="article.id" :article="article" />
+        <ArticlePreview v-for="article in articles" :key="article.id" :article="article" :displayed-version="article.latest_public_version"/>
     </div>
 </template>
 

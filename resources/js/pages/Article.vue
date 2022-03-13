@@ -1,5 +1,6 @@
 <template>
     <div>
+        <vue-title :title="displayedVersion?displayedVersion.heading: 'Публикация'"></vue-title>
         <div v-if="loading" class="d-flex justify-content-center">
             <div class="spinner-border" role="status">
             </div>
