@@ -2,11 +2,12 @@
 
 namespace App\Policies;
 
-use App\Models\Comment;
+use App\Models\Mark;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Auth;
 
-class CommentPolicy
+class MarkPolicy
 {
     use HandlesAuthorization;
 
@@ -25,10 +26,10 @@ class CommentPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Comment  $comment
+     * @param  \App\Models\Mark  $mark
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(?User $user, Comment $comment)
+    public function view(?User $user, Mark $mark)
     {
         return true;
     }
@@ -41,41 +42,41 @@ class CommentPolicy
      */
     public function create(User $user)
     {
-        return $user->hasPermissionTo('create comments');
+        return $user->hasPermissionTo('create marks');
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Comment  $comment
+     * @param  \App\Models\Mark  $mark
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Comment $comment)
+    public function update(User $user, Mark $mark)
     {
-        return $user->hasPermissionTo('update comments') && $user->id === $comment->user_id;
+        return $user->hasPermissionTo('update marks') && $mark->user_id = $user->id;
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Comment  $comment
+     * @param  \App\Models\Mark  $mark
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Comment $comment)
+    public function delete(User $user, Mark $mark)
     {
-        return $user->hasPermissionTo('delete comments');
+        return $user->hasPermissionTo('delete marks');
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Comment  $comment
+     * @param  \App\Models\Mark  $mark
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Comment $comment)
+    public function restore(User $user, Mark $mark)
     {
         //
     }
@@ -84,10 +85,10 @@ class CommentPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Comment  $comment
+     * @param  \App\Models\Mark  $mark
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Comment $comment)
+    public function forceDelete(User $user, Mark $mark)
     {
         //
     }

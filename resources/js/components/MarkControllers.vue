@@ -46,21 +46,36 @@ export default {
         },
 
         async markHandler(value) {
-            if(this.hasPositive && value === 1 || this.hasNegative && value === -1) {
-                await DataService.deleteMark(this.ownMark_id)
-                this.markable.marks = this.markable.marks.filter((mark) => mark.id !== this.ownMark_id);
-            } else if(this.hasPositive && value === -1 ||this.hasNegative && value === 1 ) {
-                const mark = DataService.updateMark(this.ownMark_id, value)
-                this.markable.marks.find(mark => mark.id === this.ownMark_id).value = value;
-            } else if(!this.hasNegative && !this.hasPositive){
-                const mark = await DataService.createMark({
-                    markable_type: this.markable_type,
-                    markable_id: this.markable.id,
-                    value: value
-                });
-                this.markable.marks.push(mark);
+            if(this.$can('create marks')) {
+                if (this.hasPositive && value === 1 || this.hasNegative && value === -1) {
+                    await DataService.deleteMark(this.ownMark_id)
+                    this.markable.marks = this.markable.marks.filter((mark) => mark.id !== this.ownMark_id);
+                } else if (this.hasPositive && value === -1 || this.hasNegative && value === 1) {
+                    const mark = DataService.updateMark(this.ownMark_id, value)
+                    this.markable.marks.find(mark => mark.id === this.ownMark_id).value = value;
+                } else if (!this.hasNegative && !this.hasPositive) {
+                    const mark = await DataService.createMark({
+                        markable_type: this.markable_type,
+                        markable_id: this.markable.id,
+                        value: value
+                    });
+                    this.markable.marks.push(mark);
+                }
+                this.defineState()
+            } else {
+                if(!this.userId)
+                    this.$toasted.show('Чтобы поставить оценку нужно себя обозначить(((', {
+                        theme: "toasted-primary",
+                        position: "bottom-left",
+                        duration: 3000
+                    })
+                else
+                    this.$toasted.show('Вам нельзя ставить оценки',{
+                        theme: "toasted-primary",
+                        position: "bottom-left",
+                        duration: 3000
+                    });
             }
-            this.defineState()
         }
     },
     created() {

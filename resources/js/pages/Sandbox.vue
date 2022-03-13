@@ -217,7 +217,7 @@ export default {
         },
         created: function() {
             this.loading = false;
-            this.$toasted.show("Публикация отправлена на модерацию", {
+            this.$toasted.success("Публикация отправлена на модерацию", {
                 theme: "toasted-primary",
                 position: "bottom-left",
                 duration: 3000

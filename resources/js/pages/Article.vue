@@ -51,7 +51,7 @@
                 <div class="d-inline-flex ">
                     <MarkControllers :markable="displayedVersion" :markable_type="'Version'"/>
                     <div class="art-post-evals-footer">
-                        <a class="url" @click="commentForm = !commentForm">Комментировать</a>
+                        <a class="url" @click="commentFormEventHandler">Комментировать</a>
                     </div>
                 </div>
             </div>
@@ -114,6 +114,24 @@ export default {
         }
     },
     methods: {
+        commentFormEventHandler(){
+            if(this.$can('create comments'))
+                this.commentForm = !this.commentForm;
+            else {
+                if(!this.userId)
+                    this.$toasted.show('Чтобы оставить комментарий нужно себя обозначить(0((', {
+                        theme: "toasted-primary",
+                        position: "bottom-left",
+                        duration: 3000
+                    });
+                else
+                    this.$toasted.show('Тебе запрещено оставлять комментарии(((', {
+                        theme: "toasted-primary",
+                        position: "bottom-left",
+                        duration: 3000
+                    });
+            }
+        },
         onCommentFormSubmit(newComment) {
             this.commentForm = false;
             this.displayedVersion.comments.push(newComment);

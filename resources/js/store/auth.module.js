@@ -91,6 +91,8 @@ export const auth = {
         },
         logout(state) {
             state.status.loggedIn = false;
+            const { can, rules } = new AbilityBuilder(Ability);
+            this._vm.$ability.update(rules);
             state.user = null;
         },
         registerSuccess(state) {

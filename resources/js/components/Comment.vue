@@ -16,7 +16,7 @@
             <div class="d-inline-flex">
                 <MarkControllers :markable_type="'Comment'" :markable="comment" />
                 <div class="art-post-evals-footer">
-                    <a class="url" @click="replayForm = !replayForm">Ответить</a>
+                    <a class="url" @click="replayEvent">Ответить</a>
                 </div>
             </div>
         </div>
@@ -75,7 +75,22 @@ export default {
             });
         },
         replayEvent(){
-          this.replayForm = true;
+            if(this.$can('create comments'))
+                 this.replayForm = !this.replayForm;
+            else {
+                if(!this.userId)
+                    this.$toasted.show('Чтобы оставить комментарий нужно себя обозначить(0((', {
+                        theme: "toasted-primary",
+                        position: "bottom-left",
+                        duration: 3000
+                    });
+                else
+                    this.$toasted.show('Тебе запрещено оставлять комментарии(((', {
+                        theme: "toasted-primary",
+                        position: "bottom-left",
+                        duration: 3000
+                    });
+            }
         },
         onCommentFormSubmit(newComment){
             this.replayForm = false;

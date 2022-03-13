@@ -14,6 +14,11 @@ use Illuminate\Validation\Rule;
 
 class MarkController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Mark::class, 'mark');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -79,10 +84,10 @@ class MarkController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Mark  $mark
-     * @return \Illuminate\Http\Response
+     * @return bool
      */
     public function destroy(Mark $mark)
     {
-        $mark->delete();
+        return $mark->delete();
     }
 }

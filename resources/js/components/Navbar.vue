@@ -55,7 +55,7 @@
                 <div class="menu-dropdown">
                     <router-link to="/profile">{{user.name}}</router-link>
                     <div class="menu-dropdown-content">
-                        <a href="/profile/sandbox">Написать публикацию</a>
+                        <router-link to="/profile/sandbox" v-if="$can('create articles')">Написать публикацию</router-link>
                         <a @click.prevent="logout">Выйти</a>
                     </div>
                 </div>
