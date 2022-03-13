@@ -32,7 +32,7 @@
                     Базовая версия:
                     <VersionsDropdown :versions="inArticle.versions" :default="baseVersion" @input="onChangeVersion"/>
                 </p>
-                <Editor :article="baseVersion.body?baseVersion.body:null" class="art-post-content" @editorReady="editorReady"/>
+                <Editor :article="baseVersion.body?baseVersion.body:null" class="art-post-content" @editorReady="editorReady" ref="Editor"/>
                 <button class="btn btn-dark p-2" @click="toSecondStage">Готов к публикации</button>
             </div>
 
@@ -149,6 +149,7 @@ import {Article} from "../models/Article";
 import LoadingButton from "../components/LoadingButton";
 import VersionsDropdown from "../components/VersionsDropdown";
 import {BFormSelect} from 'bootstrap-vue'
+import {Semver} from "../models/Semver";
 extend('required', {
     ...required,
     message: 'Поле {_field_} необходимо хоть чем-нибудь заполнить',
@@ -196,13 +197,13 @@ export default {
       nextSemver: function () {
           if(this.displayBaseVersionVariants)
           {
-              let semver = this.outArticle.latest_public_version.semver.split('.');
+              let semver = new Semver(this.outArticle.latest_version.semver);
               switch (this.selectedVersionType) {
-                  case "major": semver[0] =  (Number.parseInt(semver[0]) + 1).toString(); break;
-                  case "minor": semver[1] =  (Number.parseInt(semver[1]) + 1).toString(); break;
-                  case "patch": semver[2] =  (Number.parseInt(semver[2]) + 1).toString(); break;
+                  case "major": semver.incrementMajor(); break;
+                  case "minor": semver.incrementMinor(); break;
+                  case "patch": semver.incrementPatch();break;
               }
-              return semver.join('.');
+              return semver.toString();
           } else
               return '1.0.0'
       }
@@ -231,16 +232,31 @@ export default {
             getTags: 'article/getTags',
             getDomain: 'article/getDomains',
         }),
-        onChangeVersion(){
+        async onChangeVersion(newVersion) {
 
+            if(newVersion.id === this.inArticle.latest_public_version.id)
+                this.baseVersion = this.inArticle.latest_public_version;
+            else if (newVersion.id === this.inArticle.latest_version.id)
+                this.baseVersion = this.inArticle.latest_version;
+            else {
+                this.loading = true;
+                try {
+                    this.baseVersion = await DataService.getVersion(newVersion.id);
+                }catch (e) {
+                    this.$toasted.show('Не удалось загрузить версию ' + newVersion.semver);
+                }finally {
+                    this.loading = false;
+                }
+            }
+            this.$refs.Editor.reload();
         },
         setArticle(article) {
             if (article) {
                 this.outArticle = article;
-                this.baseVersion = article.latest_public_version;
+                this.baseVersion = article.latest_version;
             } else {
                 this.outArticle = new Article(this.domains[0], [])
-                this.baseVersion = this.outArticle.latest_public_version;
+                this.baseVersion = this.outArticle.latest_version;
             }
             this.selectedDomainId=this.outArticle.domain.id;
         },

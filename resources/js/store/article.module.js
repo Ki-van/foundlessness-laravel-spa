@@ -3,7 +3,7 @@ import DataService from '../services/data.service';
 export const article = {
     namespaced: true,
     state: {
-        articles: null,
+        articles: [],
         domains: null,
         tags: null,
     },
@@ -39,8 +39,9 @@ export const article = {
                     if(response.status === 422) {
                         return Promise.reject(response.data);
                     }
-                    commit('addVersion', response.data.data);
-                    return Promise.resolve(response.data.data);
+
+                    commit('addVersion', response.data);
+                    return Promise.resolve(response.data);
                 },
                 error => {
                     return Promise.reject(error);
@@ -86,12 +87,14 @@ export const article = {
                 return DataService.getDomain(id)
             }
         },
-        getArticle({commit}, id) {
+        async getArticle({commit}, id) {
             let article =  this.state.article.articles?.filter(article => article.id === id)[0]
             if(article)
                 return article;
             else {
-                return DataService.getArticle(id)
+                article = await DataService.getArticle(id)
+                commit('addArticle', article);
+                return article;
             }
         }
 
@@ -104,10 +107,14 @@ export const article = {
             state.articles.push(article);
         },
         addVersion(state, version) {
-            state.articles.find(article => article.id === version.article_id).versions.unshift({
-                id: version.id,
-                semver: version.semver
-            });
+            console.log(version);
+            let article = state.articles.find(article => article.id === version.article_id);
+            if(article) {
+                article.versions.unshift({
+                    id: version.id,
+                    semver: version.semver
+                });
+            }
         },
         setDomains(state, domains) {
             state.domains = domains;

@@ -33,7 +33,7 @@ class VersionController extends Controller
         $validated = $request->safe()->only(['heading', 'description', 'body', 'article_id', 'version_type']);
         $validated['version_status_id'] = ArticleStatus::MODERATED_ID;
         $article = Article::findOrFail($validated['article_id']);
-        $newSemVer = \PHLAK\SemVer\Version::parse($article->latestVersion()->semver);
+        $newSemVer = \PHLAK\SemVer\Version::parse($article->latestVersion(null)->semver);
         switch ($validated['version_type']) {
             case 'major': $newSemVer->incrementMajor(); break;
             case 'minor': $newSemVer->incrementMinor(); break;

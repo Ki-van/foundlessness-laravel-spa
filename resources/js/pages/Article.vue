@@ -130,7 +130,7 @@ export default {
                 .then(article => {
                     console.log()
                     this.article = article
-                    this.displayedVersion = this.article.latest_public_version;
+                    this.displayedVersion = this.article.latest_public_version?this.article.latest_public_version: this.article.latest_version;
                     this.loading = false;
                 })
                 .catch(error => {

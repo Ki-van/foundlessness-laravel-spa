@@ -39,14 +39,7 @@ export default {
         async create(article) {
             try {
                 await this.addVersion(article.version);
-                this.$toasted.show("Отправлено на модерацию", {
-                    theme: "toasted-primary",
-                    position: "bottom-left",
-                    duration: 1500
-                });
-                setTimeout(() => {
-                    this.$router.push('/profile');
-                }, 1500);
+                this.created = true;
             } catch(errors) {
                 this.errors  = errors;
             }
