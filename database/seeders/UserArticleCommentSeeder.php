@@ -21,10 +21,6 @@ class UserArticleCommentSeeder extends Seeder
      */
     public function run()
     {
-        Role::create(['name'=>'Admin']);
-        Role::create(['name'=>'User']);
-
-
         Article::factory(10)
             ->has(Version::factory(7)
                 ->has(Comment::factory(3)
@@ -46,6 +42,6 @@ class UserArticleCommentSeeder extends Seeder
             'remember_token'=>null
         ]);
 
-        $user->assignRole('Admin');
+        $user->assignRole('User');
     }
 }

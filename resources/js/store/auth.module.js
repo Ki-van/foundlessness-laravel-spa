@@ -1,5 +1,6 @@
 import AuthService from '../services/auth.service';
 import axios from "axios";
+import { AbilityBuilder, Ability } from '@casl/ability'
 
 const user = window.user;
 const initialState = user ?
@@ -43,7 +44,7 @@ export const auth = {
             );
         },
         logout({commit}) {
-            AuthService.logout().then(
+            return AuthService.logout().then(
                 response => {
                     commit('logout', response);
                     return Promise.resolve(response);
@@ -71,7 +72,15 @@ export const auth = {
     mutations: {
         loginSuccess(state, user) {
             state.user = user;
+            const { can, rules } = new AbilityBuilder(Ability);
+            if (user.roles[0] === 'Admin') {
+                can('manage', 'all');
+            } else {
+                user.roles.forEach(role => role.permissions.forEach(permission => can(permission.name, 'all')))
+            }
+            this._vm.$ability.update(rules);
             state.status.loggedIn = true;
+            console.log(this._vm.$ability.rules);
         },
         addArticle(state, article) {
             state.user.articles.push(article);

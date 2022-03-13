@@ -9,7 +9,9 @@ class AuthService {
     }
 
     async logout() {
-        const response = await axios.get('logout');
+        const response = await axios.post('logout', {}, {headers:{
+            'Accept': 'application/json'
+            }});
         return response.data;
     }
 
