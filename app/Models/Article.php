@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Article extends Model
 {
     use HasFactory;
-    protected $fillable = ['slug', 'article_status_id', 'domain_id', 'user_id'];
+    protected $fillable = ['slug', 'domain_id', 'user_id'];
     protected $casts = [
         'created_at' => 'datetime:Y-m-d',
         'updated_at' => 'datetime:Y-m-d',
@@ -24,10 +24,6 @@ class Article extends Model
         return $this->belongsTo(Domain::class, 'domain_id');
     }
 
-    public function status()
-    {
-        return $this->belongsTo(ArticleStatus::class, 'article_status_id');
-    }
     public function tags()
     {
         return $this->belongsToMany(Tag::class,'article_tag','article_id','tag_id');
@@ -56,5 +52,10 @@ class Article extends Model
             else
                 return 0;
         })->first->toArray();
+    }
+
+    public function hasPublicVersions(): bool
+    {
+        return $this->versions()->where('version_status_id', ArticleStatus::PUBLISHED_ID)->exists();
     }
 }

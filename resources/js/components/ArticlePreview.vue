@@ -38,7 +38,7 @@
                     {{index === article.tags.length -1?'':', '}}
                 </template>
             </template>
-            <template v-if="article.status.id !== 1">
+            <template v-if="displayedVersion.status.id !== 1">
                 |
                 <span class="tag">
                     Статус

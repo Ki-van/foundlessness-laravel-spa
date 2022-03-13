@@ -34,6 +34,7 @@
 import {required, email} from 'vee-validate/dist/rules'
 import {extend} from "vee-validate";
 import {mapActions} from 'vuex';
+import {Ability, AbilityBuilder} from "@casl/ability";
 
 extend('email', {
     ...email,
@@ -62,13 +63,7 @@ export default {
         async onSubmit() {
             this.loading = true;
             try {
-                const user = await this.login(this.auth)
-                let rules = [];
-                if (user.roles[0].name === 'Admin')
-                    rules = [{subject: 'all', action: 'manage'}];
-                else
-                    rules = [{subject: 'all', actions: user.roles.map((rule) => rule.permissons).join()}];
-                this.$ability.update(rules);
+                await this.login(this.auth)
                 this.$router.push('/profile');
             }catch(e) {
                 this.message = e;

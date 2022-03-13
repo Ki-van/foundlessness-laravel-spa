@@ -24,7 +24,6 @@ class ArticleResource extends JsonResource
         return [
             'id' => $this->id,
             'user' => $this->user,
-            'status' => $this->status,
             'tags' => $this->tags,
             'domain' => $this->domain,
             'versions' =>  $this->when(Auth::id() === $this->user_id, VersionMiniResource::collection($this->versions()->get(['id','semver'])),

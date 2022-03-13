@@ -31,7 +31,7 @@ class ArticlePolicy
      */
     public function view(?User $user, Article $article)
     {
-        return $article->status()->first()->status === 'published' || ($user && $user->isAuthor($article));
+        return $article->hasPublicVersions() || ($user && $user->isAuthor($article));
     }
 
     /**

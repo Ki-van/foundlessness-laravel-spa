@@ -34,10 +34,6 @@ class CreateArticlesEvSetup extends Migration
                 ->constrained('users')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-            $table->foreignId('article_status_id')
-                ->constrained('article_statuses')
-                ->cascadeOnDelete()
-                ->cascadeOnUpdate();
             $table->string('domain_id');
             $table->foreign('domain_id')
                 ->references('id')

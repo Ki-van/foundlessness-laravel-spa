@@ -8,25 +8,34 @@
         <template v-if="article && displayedVersion">
             <div class="block">
                 <div class="d-flex justify-content-between align-items-end">
-                <h2 class="art-post-header  ">
-                    <div>
-                        <img alt="CROSS" height="32" src="/images/cross.png" width="22">
-                        <a>
-                            {{ displayedVersion.heading }}
-                        </a>
-                    </div>
-                </h2>
-                    <VersionsDropdown :versions="article.versions" :default="displayedVersion" @input="onChangeVersion"/>
+                    <h2 class="art-post-header  ">
+                        <div>
+                            <img alt="CROSS" height="32" src="/images/cross.png" width="22">
+                            <a>
+                                {{ displayedVersion.heading }}
+                            </a>
+                        </div>
+                    </h2>
+                    <VersionsDropdown :default="displayedVersion" :versions="article.versions"
+                                      @input="onChangeVersion"/>
                 </div>
                 <div class="art-post-header-meta">
                     <span>Опубликовано</span>
                     <span class="date">
-                    {{ article.created_at }}
-                </span>
+                        {{ article.created_at }}
+                    </span>
                     |
                     <a class="url" href="#">
                         {{ article.user.name }}
                     </a>
+                    <template v-if="displayedVersion.status.id !== 1">
+                        <span>
+                            | Статус
+                        </span>
+                        <a class="url" href="#">
+                            {{ displayedVersion.status.status }}
+                        </a>
+                    </template>
                 </div>
             </div>
             <div class="block">
@@ -37,9 +46,10 @@
                 <p class="art-post-content">{{ displayedVersion.description }}</p>
             </div>
             <div class="block">
-                <Editor ref="Editor" :article="displayedVersion.body" :readonly="true" class="art-post-content" @editorReady="editorReady"/>
+                <Editor ref="Editor" :article="displayedVersion.body" :readonly="true" class="art-post-content"
+                        @editorReady="editorReady"/>
                 <div class="d-inline-flex ">
-                        <MarkControllers :markable="displayedVersion" :markable_type="'Version'"/>
+                    <MarkControllers :markable="displayedVersion" :markable_type="'Version'"/>
                     <div class="art-post-evals-footer">
                         <a class="url" @click="commentForm = !commentForm">Комментировать</a>
                     </div>
@@ -53,8 +63,9 @@
                     </a>
                 </h2>
             </div>
-            <div class="block" v-if="commentForm">
-                <CommentForm @onSubmit="onCommentFormSubmit" :commentable_id="displayedVersion.id" :commentable_type="'Version'"/>
+            <div v-if="commentForm" class="block">
+                <CommentForm :commentable_id="displayedVersion.id" :commentable_type="'Version'"
+                             @onSubmit="onCommentFormSubmit"/>
             </div>
             <CommentsSection :comments="displayedVersion.comments"/>
         </template>
@@ -68,6 +79,7 @@ import MarkControllers from "../components/MarkControllers";
 import CommentForm from "../components/CommentForm";
 import VersionsDropdown from "../components/VersionsDropdown";
 import DataService from "../services/data.service";
+
 export default {
     name: "Article",
     components: {
@@ -95,14 +107,14 @@ export default {
                     return comment.replies.reduce((partialTotal, currentComment) => partialTotal + counter(currentComment) + 1, 0)
                 }
             };
-            if(this.displayedVersion.comments)
+            if (this.displayedVersion.comments)
                 return this.displayedVersion.comments.reduce((partialTotal, currentComment) => partialTotal + counter(currentComment), 0)
             else
                 return 0;
         }
     },
     methods: {
-        onCommentFormSubmit(newComment){
+        onCommentFormSubmit(newComment) {
             this.commentForm = false;
             this.displayedVersion.comments.push(newComment);
         },
@@ -111,15 +123,15 @@ export default {
         },
         async onChangeVersion(newVersion) {
 
-            if(newVersion.id === this.article.latest_public_version.id)
+            if (newVersion.id === this.article.latest_public_version.id)
                 this.displayedVersion = this.article.latest_public_version;
             else {
                 this.loading = true;
                 try {
                     this.displayedVersion = await DataService.getVersion(newVersion.id);
-                }catch (e) {
+                } catch (e) {
                     this.$toasted.show('Не удалось загрузить версию ' + newVersion.semver);
-                }finally {
+                } finally {
                     this.loading = false;
                 }
             }
@@ -131,7 +143,7 @@ export default {
                 .then(article => {
                     console.log()
                     this.article = article
-                    this.displayedVersion = this.article.latest_public_version?this.article.latest_public_version: this.article.latest_version;
+                    this.displayedVersion = this.article.latest_public_version ? this.article.latest_public_version : this.article.latest_version;
                     this.loading = false;
                 })
                 .catch(error => {

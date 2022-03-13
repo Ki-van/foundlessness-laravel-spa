@@ -25,8 +25,6 @@ class ArticleFactory extends Factory
                 'philosophy',
                 'it'
             ]),
-            'article_status_id' => $this->faker->randomElement(ArticleStatus::all('id')
-                ->map(fn($val) => $val['id'])->toArray()),
             'user_id' => User::factory()->hasAttached(Role::findByName('User')),
             'slug' => $this->faker->unique()->word,
         ];

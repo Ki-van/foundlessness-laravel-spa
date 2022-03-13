@@ -14,6 +14,10 @@ export default {
             return (this.$route.meta.layout || 'main') + '-layout';
         }
     },
+    created() {
+        if(window.user)
+            this.$store.commit('auth/loginSuccess', window.user);
+    },
     components: {
         MainLayout,
         EmptyLayout
