@@ -42,6 +42,16 @@ const routes = [
         component: () => import('../pages/CreateArticle'),
     },
     {
+        name: 'profile.moderation',
+        path: '/profile/moderation',
+        component: () => import('../pages/Moderation'),
+    },
+    {
+        name: 'profile.moderation.edit',
+        path: '/profile/moderation/:id',
+        component: () => import('../pages/Moderate'),
+    },
+    {
         name: 'profile.sandbox.edit',
         path: '/profile/sandbox/:id',
         component: () => import('../pages/AddVersion'),

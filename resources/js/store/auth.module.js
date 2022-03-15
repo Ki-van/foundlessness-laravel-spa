@@ -77,10 +77,13 @@ export const auth = {
                 can('manage', 'all');
             } else {
                 user.roles.forEach(role => role.permissions.forEach(permission => can(permission.name, 'all')))
+                user.permissions.forEach(function(permission){
+                   permission = permission.name.split(' ');
+                   can(permission[0], permission[1]);
+                });
             }
             this._vm.$ability.update(rules);
             state.status.loggedIn = true;
-            console.log(this._vm.$ability.rules);
         },
         addArticle(state, article) {
             state.user.articles.push(article);

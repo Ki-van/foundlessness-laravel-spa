@@ -43,5 +43,6 @@ class UserArticleCommentSeeder extends Seeder
         ]);
 
         $user->assignRole('User');
+        $user->givePermissionTo('moderate math');
     }
 }

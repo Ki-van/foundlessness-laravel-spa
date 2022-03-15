@@ -32,7 +32,8 @@ Route::apiResource('/user', UserController::class);
 Route::apiResource('/domain', DomainController::class);
 
 Route::post('/storage/images/uploadByFile', [ArticleImageController::class, 'uploadFile']);
-
+Route::get('/moderation', [\App\Http\Controllers\ModerationController::class, 'index']);
+Route::get('/moderation/{article}', [\App\Http\Controllers\ModerationController::class, 'show']);
 Route::group(['prefix' => 'books', 'middleware' => 'auth:sanctum'], function () {
 
 });

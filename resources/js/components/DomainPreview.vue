@@ -20,7 +20,9 @@
 <script>
 export default {
     name: "DomainPreview",
-    props: ['domain'],
+    props: {
+        domain: Object,
+    },
     computed: {
         link(){
             return '/domains/' + this.domain.id;

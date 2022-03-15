@@ -74,6 +74,10 @@ export default {
             default: false
         },
         displayedVersion: Object,
+        propsLink: {
+            type: String,
+            default: ''
+        }
     },
     computed: {
         ...mapGetters({
@@ -83,7 +87,10 @@ export default {
             return this.displayedVersion.marks.reduce((partialSum, mark) => partialSum + mark.value, 0);
         },
         link(){
-            return '/article/' + this.article.id;
+            if(this.propsLink)
+                return this.propsLink
+            else
+                return '/article/' + this.article.id;
         },
         commentsTotal() {
             let counter = (comment) => {

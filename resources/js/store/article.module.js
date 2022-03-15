@@ -4,7 +4,8 @@ export const article = {
     namespaced: true,
     state: {
         articles: [],
-        domains: null,
+        domains: window.domains,
+        toModerateArticles: [],
         tags: null,
     },
     actions: {
@@ -19,6 +20,37 @@ export const article = {
                 }
             );
         },
+        getToModerateArticles({commit}, params = null) {
+            return DataService.getModeratedArticles(params).then(
+                toModerateArticles => {
+                    commit('setToModerateArticles', toModerateArticles);
+                    return Promise.resolve(toModerateArticles);
+                },
+                error => {
+                    return Promise.reject(error);
+                }
+            );
+        },
+        async getToModerateArticle({commit}, id) {
+            let article =  this.state.article.toModerateArticles?.filter(article => article.id === id)[0]
+            if(article)
+                return article;
+            else {
+                article = await DataService.getModeratedArticle(id)
+                return article;
+            }
+        },
+        async moderateVersion({commit}, version) {
+            try {
+                const response = await DataService.publishVersion(version.id);
+                commit('removeModeratedVersion', version);
+                return Promise.resolve(response);
+            }catch (e)
+            {
+                return Promise.reject(e);
+            }
+        },
+
         createArticle({commit}, article){
             return DataService.createArticle(article).then(
                 response => {
@@ -49,9 +81,16 @@ export const article = {
             )
         },
 
+        /**
+         *
+         * @param commit
+         * @param params
+         * @param fresh
+         * @returns {Promise<Array>}
+         */
         getDomains({commit}, params = null, fresh = false) {
-            if(this.state.domains && !fresh)
-                return this.state.domains;
+            if(this.state.article.domains && !fresh)
+                return this.state.article.domains;
             else {
                 return DataService.getDomains(params).then(
                     domains => {
@@ -103,17 +142,27 @@ export const article = {
         setArticles(state, articles) {
             state.articles = articles;
         },
+        setToModerateArticles(state, articles) {
+            state.toModerateArticles = articles;
+        },
         addArticle(state, article) {
             state.articles.push(article);
         },
         addVersion(state, version) {
-            console.log(version);
             let article = state.articles.find(article => article.id === version.article_id);
             if(article) {
                 article.versions.unshift({
                     id: version.id,
                     semver: version.semver
                 });
+            }
+        },
+        removeModeratedVersion(state, version) {
+            let article = state.toModerateArticles.find(article => article.id === version.article_id);
+            if(article) {
+                article = article.versions.filter(value => value.id !== version.id);
+                if(article.versions.length === 0)
+                    state.toModerateArticles = state.toModerateArticles.filter(article => article.id !== version.article_id);
             }
         },
         setDomains(state, domains) {

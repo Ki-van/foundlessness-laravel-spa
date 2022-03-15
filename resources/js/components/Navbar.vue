@@ -56,6 +56,7 @@
                     <router-link to="/profile">{{user.name}}</router-link>
                     <div class="menu-dropdown-content">
                         <router-link to="/profile/sandbox" v-if="$can('create articles')">Написать публикацию</router-link>
+                        <router-link to="/profile/moderation" v-if="canModerate">Модерация</router-link>
                         <a @click.prevent="logout">Выйти</a>
                     </div>
                 </div>
@@ -65,6 +66,8 @@
 </template>
 
 <script>
+import {mapActions} from "vuex";
+
 export default {
     name: "Navbar",
     computed: {
@@ -73,14 +76,29 @@ export default {
         },
         user() {
             return this.$store.state.auth.user;
-        }
+        },
+        canModerate(){
+            let domains = this.$store.state.article.domains;
+            if(domains)
+                for (let i = 0; i < domains.length; i++) {
+                    if(this.$can('moderate', domains[i].id))
+                        return true;
+                }
+            return false;
+        },
     },
     methods: {
+        ...mapActions({
+            getDomains: 'article/getDomains'
+        }),
         logout() {
             this.$store.dispatch('auth/logout').then(()=>{
                 this.$router.push('/');
             });
         }
+    },
+    created() {
+        this.getDomains();
     }
 }
 </script>

@@ -58,4 +58,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Article::class, 'user_id');
     }
+
+    public function moderatedDomains(): array
+    {
+        return Domain::all('id')
+            ->filter(fn ($domain) => $this->hasPermissionTo('moderate '.$domain->id))
+            ->map(fn ($domain) => $domain->id)
+            ->toArray();
+    }
 }

@@ -54,6 +54,25 @@ class DataService {
         else
             throw new Error('No article with such id was found');
     }
+    async getModeratedArticles() {
+        const response = await axios.get(`/api/moderation`);
+        return response.data.data;
+    }
+
+    async publishVersion(id) {
+        const response = await axios.put(`/api/version/${id}`, {
+            version_status_id: 1
+        });
+        return response;
+    }
+
+    async getModeratedArticle(id) {
+        const response = await axios.get(`/api/moderation/${id}`);
+        if(response && response.data)
+            return response.data.data;
+        else
+            throw new Error('No article with such id was found');
+    }
 
     async getVersion(id) {
         const response = await axios.get(`/api/version/${id}`);
